@@ -11,7 +11,19 @@
         <e p="FSMOnEnter.cs" t="Include" />
         <e p="FSMOnExit.cs" t="Include" />
         <e p="Scripts" t="Include">
-          <e p="ActController.cs" t="Include" />
+          <e p="ActionController.cs" t="Include" />
+          <e p="Camera" t="Include">
+            <e p="CameraCtrl.cs" t="Include" />
+          </e>
+          <e p="FSMEvents" t="Include">
+            <e p="FSMEvents.cs" t="Include" />
+            <e p="FSMEvents_Fall.cs" t="Include" />
+            <e p="FSMEvents_Jab.cs" t="Include" />
+            <e p="FSMEvents_Jump.cs" t="Include" />
+            <e p="FSMEvents_OnGround.cs" t="Include" />
+            <e p="FSMEvents_Roll.cs" t="Include" />
+          </e>
+          <e p="FSMOnUpdate.cs" t="Include" />
           <e p="Global" t="Include">
             <e p="GameConst.cs" t="Include" />
             <e p="GameDelegate.cs" t="Include" />
