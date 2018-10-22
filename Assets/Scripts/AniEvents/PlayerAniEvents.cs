@@ -3,6 +3,7 @@
  * 玩家的动画事件
  * 
  * ［用法］
+ * 挂载到玩家游戏对象上。
  * 插入到具体的动画帧上。
  * 
  * ［备注］ 
@@ -33,6 +34,10 @@ namespace DSWork {
 //			}
 //		}
 
+		/// <summary>
+		/// 重置Trigger信号
+		/// </summary>
+		/// <param name="trigger">Trigger信号名</param>
 		public void ResetTrigger(string trigger) {
 			animator.ResetTrigger(trigger);
 		}

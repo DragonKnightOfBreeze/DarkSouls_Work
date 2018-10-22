@@ -19,17 +19,15 @@ using UnityEngine;
 
 namespace DSWork {
 	public class RootMotionControl : MonoBehaviour {
-		/// <summary>
-		/// Root Motion更新事件
-		/// </summary>
+		/// <summary>Root Motion更新事件</summary>
 		public event AnimatorMoveDelegate RMUpdateEvent;
-		
+
 		private Animator animator;
 
-		void Awake() {
+		private void Awake() {
 			animator = GetComponent<Animator>();
 		}
-		
+
 		private void OnAnimatorMove() {
 //			Vector3 temp = animator.deltaPosition;
 //			print(temp.x);

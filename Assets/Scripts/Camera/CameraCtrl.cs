@@ -1,24 +1,30 @@
+//TODO：优化结构（相机模块和玩家模型模块）
+//TODO：参考ADF中的相关代码进行重构
+//TODO：参考UU中的相关代码进行重构
+ 
 /*******
  * ［概述］
  * 相机控制器（不直接控制相机）
  * 
  * ［用法］
- * 挂载到顶层的CameraContainer上面（也可以不挂在这上面）
+ * 挂载到_Scripts上。
  * 
  * ［备注］ 
  * 角色的移动应该基于摄像头的角度，也就是Container_Y的角度
  * 最直接了当的方法就是将Container_Y设为Model的父GO
  *
- * TODO：优化结构，相机模块和玩家模型模块
- * 
  * 项目：《黑暗之魂》复刻教程
  * 作者：微风的龙骑士 风游迩
  */
+
 using System;
 using DSWork;
 using UnityEngine;
 
 namespace UU_Lesson {
+	/// <summary>
+	/// 相机控制器
+	/// </summary>
 	public class CameraCtrl : MonoBehaviour {
 		/// <summary>水平视角旋转速度</summary>
 		public float horizontalSpeed = 100.0f;
@@ -39,7 +45,7 @@ namespace UU_Lesson {
 
 		private void Awake() {
 			model = GameObject.FindWithTag("Player");
-			pi = GameObject.Find("_Scripts").transform.Find("__Player").GetComponent<PlayerInput>();
+			pi = GameObject.Find("_Scripts").transform.Find("_Player").GetComponent<PlayerInput>();
 
 			mainCamera = Camera.main;
 			if(mainCamera == null)
@@ -68,7 +74,7 @@ namespace UU_Lesson {
 		/// <summary>相机旋转</summary>
 		private void CameraRotate() {
 			//水平方向视角旋转，如果不是Model的父物体，有负号
-			container_Y.transform.Rotate(Vector3.up, -pi.VUp * horizontalSpeed * Time.deltaTime);
+			container_Y.transform.Rotate(Vector3.up, pi.VUp * horizontalSpeed * Time.deltaTime);
 
 			//垂直方向视角旋转，有旋转角度限制，有负号
 			tempEulerX -= pi.VUp * verticalSpeed * Time.deltaTime;

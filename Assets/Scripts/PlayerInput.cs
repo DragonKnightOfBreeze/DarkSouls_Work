@@ -1,23 +1,26 @@
-﻿//FINISH：解决斜向移动时的速度更快的问题
+﻿//DONE：解决斜向移动时的速度更快的问题
 //TODO：转向应该和四元数挂钩，而不是向量！
-//TODO：将状态信号由布尔组改为枚举。
+//TODO：将状态信号由布尔值改为枚举
+//TODO：使用输入枚举
 
 /*******
-* ［概述］
-* 项目：《黑暗之魂》复刻教程
-* 作者：微风的龙骑士 风游迩
-* 
-* 玩家输入模块
-* 
-* ［功能］
-* 跑步：按住Ctrl
-* 跳跃：跑步时按下Space
-* 翻滚：按下Space
-*
-* ［备注］
-* SmoothDamp：平滑增加
-*
-*/
+ * ［概述］
+ * 
+ * 玩家输入模块
+ * 
+ * ［用法］
+ *
+ * 挂载到_Scripts/_Player上。
+ * 
+ * ［备注］
+ * 跑步：按住Ctrl
+ * 跳跃：跑步时按下Space
+ * 翻滚：按下Space
+ * SmoothDamp：平滑增加
+ * 
+ * 项目：《黑暗之魂》复刻教程
+ * 作者：微风的龙骑士 风游迩
+ */
 using System.Collections;
 using UnityEngine;
 
@@ -36,14 +39,14 @@ namespace DSWork {
 		public string keyB = "space";
 		public string keyC = "e";
 		public string keyD = "f";
-		
-		
+
+
 		//视角移动（后期要替换成用鼠标的位移控制）
 		public string KeyVUp = "up";
 		public string KeyVDown = "down";
 		public string KeyVLeft = "left";
 		public string KeyVRight = "right";
-		
+
 
 		//二维信号
 		[Header("===Output Signals===")]
@@ -59,21 +62,20 @@ namespace DSWork {
 
 		//按压信号
 		/// <summary>跑步信号</summary>
-		public bool run = false;
+		public bool run;
 		//单击触发信号
 		/// <summary>后跃/翻滚/跳跃信号</summary>
-		public bool jab_roll_jump = false;
+		public bool jab_roll_jump;
 //		private bool lastJump = false;
 
 		public bool attack;
-		
 
 
 		/// <summary>是否启用模块</summary>
 		[Header("===Others===")]
 		public bool inputEnabled = true;
 
-		
+
 		//二维信号的目标位置
 		private float targetDForward;
 		private float targetDRight;
@@ -144,20 +146,16 @@ namespace DSWork {
 
 		}
 
-		
-		/// <summary>
-		/// 得到用户输入，控制视角移动
-		/// </summary>
+
+		/// <summary>得到用户输入，控制视角移动</summary>
 		private void GetInput_View() {
 			//计算视角移动的信号
 			VUp = (Input.GetKey(KeyVUp) ? 1.0f : 0) - (Input.GetKey(KeyVDown) ? 1.0f : 0);
 			VRight = (Input.GetKey(KeyVRight) ? 1.0f : 0) - (Input.GetKey(KeyVLeft) ? 1.0f : 0);
 		}
-		
-		
-		/// <summary>
-		/// 将正方形坐标转化成圆形坐标
-		/// </summary>
+
+
+		/// <summary>将正方形坐标转化成圆形坐标</summary>
 		private Vector2 SquareToCircle(Vector2 input) {
 			var output = Vector2.zero;
 			//使用公式
