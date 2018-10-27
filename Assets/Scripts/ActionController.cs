@@ -123,9 +123,9 @@ namespace DSWork {
 		private IEnumerator PlayerActionCr() {
 			yield return new WaitForEndOfFrame();
 			while(true) {
-				PlayerDodge_Roll_Jump();
+				PlayerDodge();
 				PlayerFallRoll();
-				PlayerAttack();
+				PlayerAct();
 				PlayerMove();
 				UseGravity();
 				OnGroundCheck();
@@ -137,8 +137,8 @@ namespace DSWork {
 		private void PlayerMove() {
 			//设置混合参数（在待机、移动、奔跑状态之间切换）
 			//利用插值函数实现平滑过渡效果，每一次过渡一半。
-			float targetRunMulti = pi.DMag * Mathf.Lerp(animator.GetFloat(PlayerFSMParam.forward.S()), pi.run ? 2.0f : 1.0f, 0.5f);
-			animator.SetFloat(PlayerFSMParam.forward.S(), targetRunMulti);
+			float targetRunMulti = pi.DMag * Mathf.Lerp(animator.GetFloat(PlayerFSMParam.forward.TS()), pi.Sgn_Run ? 2.0f : 1.0f, 0.5f);
+			animator.SetFloat(PlayerFSMParam.forward.TS(), targetRunMulti);
 
 			//设置方向（旋转）
 			if(pi.DMag > 0.1f) {
@@ -148,9 +148,10 @@ namespace DSWork {
 			}
 
 			//设置玩家速度（二维）（考虑是否奔跑）（考虑是否锁定了平面移动）
+			//TODO：这里的forward是否应该是mainCamera.transform.forward？
 			if(!lockPlanar) {
-				var tempMoveSpeed = pi.DMag * model.transform.forward * walkSpeed * (pi.run ? runMultiplier : 1.0f);
-				planerMoveSpeed = new Vector3(tempMoveSpeed.x, 0, planerMoveSpeed.z);
+				var tempMoveSpeed = pi.DMag * model.transform.forward * walkSpeed * (pi.Sgn_Run ? runMultiplier : 1.0f);
+				planerMoveSpeed = new Vector3(tempMoveSpeed.x, 0, tempMoveSpeed.z);
 			}
 			else {
 				planerMoveSpeed = Vector3.zero;
@@ -166,23 +167,27 @@ namespace DSWork {
 			deltaPos = Vector3.zero;
 		}
 
-		/// <summary>角色的跳跃控制</summary>
-		private void PlayerDodge_Roll_Jump() {
-			if(pi.jab_roll_jump)
-				animator.SetTrigger(PlayerFSMParam.jab_roll_jump.S());
+		/// <summary>角色的闪避控制</summary>
+		private void PlayerDodge() {
+			if(pi.Sgn_Dodge)
+				animator.SetTrigger(PlayerFSMParam.jab_roll_jump.TS());
 		}
 
 		/// <summary>角色的下落翻滚控制</summary>
 		/// <remarks>如果下落速度很快，则需要在落地时进行一次翻滚</remarks>
 		private void PlayerFallRoll() {
 			if(cc.velocity.magnitude >= 2.0f)
-				animator.SetTrigger(PlayerFSMParam.fallRoll.S());
+				animator.SetTrigger(PlayerFSMParam.fallRoll.TS());
 		}
 
-		/// <summary>角色的攻击控制</summary>
-		private void PlayerAttack() {
-			if(pi.attack && !lockAttack && CheckState(PlayerFSMState.Idle))
-				animator.SetTrigger(PlayerFSMParam.attack.S());
+		/// <summary>角色的左右手动作控制</summary>
+		private void PlayerAct() {
+			//攻击
+			if(pi.Sgn_RHandAct1 && !lockAttack && CheckState(PlayerFSMState.Idle))
+				animator.SetTrigger(PlayerFSMParam.attack.TS());
+			//防御
+			else if(pi.Sgn_LHandAct1 && CheckState(PlayerFSMState.Idle))
+				animator.SetBool(PlayerFSMParam.defense.TS(),true);
 		}
 
 
@@ -199,14 +204,13 @@ namespace DSWork {
 		
 		/// <summary>着地检查</summary>
 		public void OnGroundCheck() {
-			if(!animator.GetBool(PlayerFSMParam.isOnGround.S()) && cc.isGrounded)
-				animator.SetBool(PlayerFSMParam.isOnGround.S(), true);
-			else if(animator.GetBool(PlayerFSMParam.isOnGround.S()) && !cc.isGrounded)
-				animator.SetBool(PlayerFSMParam.isOnGround.S(), false);
+			if(!animator.GetBool(PlayerFSMParam.isOnGround.TS()) && cc.isGrounded)
+				animator.SetBool(PlayerFSMParam.isOnGround.TS(), true);
+			else if(animator.GetBool(PlayerFSMParam.isOnGround.TS()) && !cc.isGrounded)
+				animator.SetBool(PlayerFSMParam.isOnGround.TS(), false);
 		}
 		
 		#endregion
-		
 
 
 		#region ［FSM事件方法 仍然需要完善］
@@ -241,6 +245,7 @@ namespace DSWork {
 			};
 			animator.GetBehaviour<FSMEvents_OnGround>().OnExitEvent += () => { cc.material = frictionZero; };
 
+			
 			//攻击层级的待机状态的相关事件
 			animator.GetBehaviour<FSMEvents_L1_Idle>().OnEnterEvent += () => {
 				StateInitChangeLayer(0.0f);
@@ -250,15 +255,32 @@ namespace DSWork {
 			};
 
 			//单手攻击状态的相关事件
-			animator.GetBehaviour<FSMEvents_L1_Atk_1H_Slash>().OnEnterEvent += () => {
+			animator.GetBehaviour<FSMEvents_L1_1Hand_Slash>().OnEnterEvent += () => {
 				StateLock();
 				StateInitChangeLayer(1.0f);
 			};
-			animator.GetBehaviour<FSMEvents_L1_Atk_1H_Slash>().OnUpdateEvent += () => {
+			animator.GetBehaviour<FSMEvents_L1_1Hand_Slash>().OnUpdateEvent += () => {
 				StateSetSpeed(0f, PlayerFSMCurve.spd_Atk_1H_Slash1_Z);
 				StateChangeLayer(PlayerFSMLayer.AttackLayer);
 			};
-			animator.GetBehaviour<FSMEvents_L1_Atk_1H_Slash>().OnExitEvent += StateUnlock;
+			animator.GetBehaviour<FSMEvents_L1_1Hand_Slash>().OnExitEvent += StateUnlock;
+			
+			
+			//防御层级的待机状态的相关事件
+			animator.GetBehaviour<FSMEvents_L2_Idle>().OnEnterEvent += () => {
+				StateInitChangeLayer(0.0f);
+			};
+			animator.GetBehaviour<FSMEvents_L2_Idle>().OnUpdateEvent += () => {
+				StateChangeLayer(PlayerFSMLayer.AttackLayer);
+			};
+			
+			//单手防御状态的相关事件
+			animator.GetBehaviour<FSMEvents_L2_1Hand_ShieldUp>().OnEnterEvent += () => {
+				StateInitChangeLayer(1.0f);
+			};
+			animator.GetBehaviour<FSMEvents_L2_1Hand_ShieldUp>().OnUpdateEvent += () => {
+				StateChangeLayer(PlayerFSMLayer.AttackLayer);
+			};
 		}
 
 		/// <summary>使输入失效，锁定攻击，且锁定平面移动</summary>
@@ -287,21 +309,21 @@ namespace DSWork {
 		/// <param name="speed_y">Y轴固定速度</param>
 		/// <param name="speed_z">Z轴曲线速度</param>
 		private void StateSetSpeed(float speed_y, PlayerFSMCurve speed_z) {
-			thrustVec = model.transform.up * speed_y + model.transform.forward * animator.GetFloat(speed_z.S());
+			thrustVec = model.transform.up * speed_y + model.transform.forward * animator.GetFloat(speed_z.TS());
 		}
 
 		/// <summary>设置对应动画状态的Y轴曲线/固定速度，以及Z轴曲线/固定速度</summary>
 		/// <param name="speed_y">Y轴曲线速度</param>
 		/// <param name="speed_z">Z轴固定速度</param>
 		private void StateSetSpeed(PlayerFSMCurve speed_y, float speed_z) {
-			thrustVec = model.transform.up * animator.GetFloat(speed_y.S()) + model.transform.forward * speed_z;
+			thrustVec = model.transform.up * animator.GetFloat(speed_y.TS()) + model.transform.forward * speed_z;
 		}
 
 		/// <summary>设置对应动画状态的Y轴曲线/固定速度，以及Z轴曲线/固定速度</summary>
 		/// <param name="speed_y">Y轴曲线速度</param>
 		/// <param name="speed_z">Z轴曲线速度</param>
 		private void StateSetSpeed(PlayerFSMCurve speed_y, PlayerFSMCurve speed_z) {
-			thrustVec = model.transform.up * animator.GetFloat(speed_y.S()) + model.transform.forward * animator.GetFloat(speed_z.S());
+			thrustVec = model.transform.up * animator.GetFloat(speed_y.TS()) + model.transform.forward * animator.GetFloat(speed_z.TS());
 		}
 
 		/// <summary>准备切换FSM层级（使用Lerp平滑切换）</summary>
@@ -311,14 +333,14 @@ namespace DSWork {
 		}
 
 		/// <summary>切换FSM层级（使用Lerp平滑切换）</summary>
-		/// <remarks>思路：将指定层级的权重平滑增加到1.0</remarks>
-		/// <param name="layer">切换到的层级</param>
+		/// <remarks>思路：将指定层级的权重平滑增加到1.0/0</remarks>
+		/// <param name="layer">改变权重的层级</param>
 		/// <param name="lerpTime">插值时间</param>
 		private void StateChangeLayer(PlayerFSMLayer layer, float lerpTime = 0.4f) {
 			//使用插值，平缓切换FSM层级
-			float curWeight = animator.GetLayerWeight(animator.GetLayerIndex(layer.S()));
+			float curWeight = animator.GetLayerWeight(animator.GetLayerIndex(layer.TS()));
 			curWeight = Mathf.Lerp(curWeight, lerpTarget, lerpTime);
-			animator.SetLayerWeight(animator.GetLayerIndex(layer.S()), lerpTarget);
+			animator.SetLayerWeight(animator.GetLayerIndex(layer.TS()), curWeight);
 		}
 
 		#endregion
@@ -332,8 +354,8 @@ namespace DSWork {
 		/// <param name="layerName">指定的层级名称</param>
 		/// <returns></returns>
 		private bool CheckState(PlayerFSMState stateName, PlayerFSMLayer layerName = PlayerFSMLayer.BaseLayer) {
-			int layerIndex = animator.GetLayerIndex(layerName.S());
-			bool result = animator.GetCurrentAnimatorStateInfo(layerIndex).IsName(stateName.S());
+			int layerIndex = animator.GetLayerIndex(layerName.TS());
+			bool result = animator.GetCurrentAnimatorStateInfo(layerIndex).IsName(stateName.TS());
 			return result;
 		}
 		
@@ -343,8 +365,8 @@ namespace DSWork {
 		/// <remarks>仅在第三段攻击时应用</remarks>
 		/// <param name="deltaPosObj"></param>
 		private void OnRMUpdate(object deltaPosObj) {
-			if(CheckState(PlayerFSMState.Atk_1H_Slash3,PlayerFSMLayer.AttackLayer))
-				deltaPos += (Vector3)deltaPosObj;
+			if(CheckState(PlayerFSMState.__1Hand_Slash3,PlayerFSMLayer.AttackLayer))
+				deltaPos += 0.5f * deltaPos + 0.5f * (Vector3)deltaPosObj;
 		}
 		
 		#endregion

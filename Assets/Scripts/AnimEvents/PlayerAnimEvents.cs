@@ -16,7 +16,7 @@ using UnityEngine;
 
 namespace DSWork {
 	/// <summary>玩家的动画事件</summary>
-	public class PlayerAniEvents : MonoBehaviour {
+	public class PlayerAnimEvents : MonoBehaviour {
 		private Animator animator;
 
 		private void Awake() {
