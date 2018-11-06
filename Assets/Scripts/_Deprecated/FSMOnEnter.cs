@@ -1,5 +1,5 @@
-﻿////TODO：将Unity消息变为委托事件。
-////TODO：将stateInfo.shotNameHash作为参数，然后利用Animator.StringToHash(stateName)来判断状态名是否对应。
+﻿////Done：将Unity消息变为委托事件。
+////Waste：将stateInfo.shotNameHash作为参数，然后利用Animator.StringToHash(stateName)来判断状态名是否对应。
 //
 //using System.Collections;
 //using System.Collections.Generic;

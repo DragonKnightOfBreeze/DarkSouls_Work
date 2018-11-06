@@ -15,7 +15,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using DSWork.Global;
-using DSWork.Utils;
+using DSWork.Utility;
 using UnityEngine;
 
 namespace DSWork {

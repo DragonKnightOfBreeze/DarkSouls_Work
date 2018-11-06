@@ -2,8 +2,5 @@
 .vscode
 Library
 obj
-Packages
-ProjectSettings
 Temp
 
-*.meta

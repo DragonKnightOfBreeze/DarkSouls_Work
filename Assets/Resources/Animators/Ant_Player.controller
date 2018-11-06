@@ -14,7 +14,13 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: jab_roll_jump
+  - m_Name: right
+    m_Type: 1
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
+  - m_Name: dodge
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -76,6 +82,12 @@ AnimatorController:
     m_Controller: {fileID: 0}
   - m_Name: isMirror
     m_Type: 4
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
+  - m_Name: jump
+    m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
@@ -365,26 +377,42 @@ BlendTree:
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: d6402196a40bf8b4c813a3e2ce7fe3ac, type: 3}
     m_Threshold: 1
-    m_Position: {x: 0, y: 0}
-    m_TimeScale: 1
+    m_Position: {x: 0, y: 1}
+    m_TimeScale: 1.2
     m_CycleOffset: 0
     m_DirectBlendParameter: forward
     m_Mirror: 0
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 343eeef28ba7d964595f149be720ff18, type: 3}
     m_Threshold: 2
-    m_Position: {x: 0, y: 0}
+    m_Position: {x: 0, y: 2}
+    m_TimeScale: 1
+    m_CycleOffset: 0
+    m_DirectBlendParameter: forward
+    m_Mirror: 0
+  - serializedVersion: 2
+    m_Motion: {fileID: 7400000, guid: 259aa40b94029c24ea0f0d78db5b78e6, type: 3}
+    m_Threshold: 3
+    m_Position: {x: 1, y: 0}
+    m_TimeScale: 1.2
+    m_CycleOffset: 0
+    m_DirectBlendParameter: forward
+    m_Mirror: 0
+  - serializedVersion: 2
+    m_Motion: {fileID: 7400000, guid: 454bc320af19a8040b1fee15aac4d5c1, type: 3}
+    m_Threshold: 4
+    m_Position: {x: 2, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: forward
     m_Mirror: 0
   m_BlendParameter: forward
-  m_BlendParameterY: Blend
+  m_BlendParameterY: right
   m_MinThreshold: 0
-  m_MaxThreshold: 2
+  m_MaxThreshold: 4
   m_UseAutomaticThresholds: 0
   m_NormalizedBlendValues: 0
-  m_BlendType: 0
+  m_BlendType: 2
 --- !u!1101 &1101004644920509780
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -393,7 +421,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: jab_roll_jump
+    m_ConditionEvent: jump
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1102998122092884902}
@@ -462,11 +490,8 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: jab_roll_jump
+    m_ConditionEvent: dodge
     m_EventTreshold: 0
-  - m_ConditionMode: 4
-    m_ConditionEvent: forward
-    m_EventTreshold: 1.1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1102711164362855346}
   m_Solo: 0
@@ -558,7 +583,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: jab_roll_jump
+    m_ConditionEvent: dodge
     m_EventTreshold: 0
   - m_ConditionMode: 4
     m_ConditionEvent: forward
@@ -683,7 +708,7 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0.16565347
   m_TransitionOffset: 0
   m_ExitTime: 0.8972603
   m_HasExitTime: 0
@@ -723,7 +748,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: jab_roll_jump
+    m_ConditionEvent: dodge
     m_EventTreshold: 0
   - m_ConditionMode: 4
     m_ConditionEvent: forward
@@ -1014,9 +1039,9 @@ AnimatorState:
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 1101062984941423210}
+  - {fileID: 1101004644920509780}
   - {fileID: 1101773108963156336}
   - {fileID: 1101154637329681506}
-  - {fileID: 1101004644920509780}
   m_StateMachineBehaviours:
   - {fileID: 114329803058053678}
   - {fileID: 114170273406501196}

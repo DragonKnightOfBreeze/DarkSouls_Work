@@ -14,7 +14,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <BaseDirectory>.</BaseDirectory>
   </PropertyGroup>
@@ -59,9 +59,10 @@
     <Compile Include="Assets\Scripts\_Deprecated\FSMOnUpdate.cs" />
     <Compile Include="Assets\Scripts\_Deprecated\OnGroundSensor.cs" />
     <Compile Include="Assets\Scripts\_Test\JoyStickTest.cs" />
-    <Compile Include="Assets\Scripts\ActionController.cs" />
     <Compile Include="Assets\Scripts\AnimEvents\PlayerAnimEvents.cs" />
-    <Compile Include="Assets\Scripts\Camera\CameraCtrl.cs" />
+    <Compile Include="Assets\Scripts\Camera\CameraControl.cs" />
+    <Compile Include="Assets\Scripts\Controller\ActionControl.cs" />
+    <Compile Include="Assets\Scripts\Controller\PlayerInput.cs" />
     <Compile Include="Assets\Scripts\FSMClearSignals.cs" />
     <Compile Include="Assets\Scripts\FSMEvents\FSMEvents.cs" />
     <Compile Include="Assets\Scripts\FSMEvents\FSMEvents_Fall.cs" />
@@ -76,10 +77,17 @@
     <Compile Include="Assets\Scripts\Global\GameConst.cs" />
     <Compile Include="Assets\Scripts\Global\GameDelegate.cs" />
     <Compile Include="Assets\Scripts\Global\GameEnum.cs" />
+    <Compile Include="Assets\Scripts\Global\GlobalSetting.cs" />
     <Compile Include="Assets\Scripts\LeftArmAnimFix.cs" />
-    <Compile Include="Assets\Scripts\PlayerInput.cs" />
+    <Compile Include="Assets\Scripts\MyButton.cs" />
+    <Compile Include="Assets\Scripts\MyTimer.cs" />
     <Compile Include="Assets\Scripts\RootMotionControl.cs" />
-    <Compile Include="Assets\Scripts\Utils\EnumExtensions.cs" />
+    <Compile Include="Assets\Scripts\Utility\BoolTool.cs" />
+    <Compile Include="Assets\Scripts\Utility\EnumTool.cs" />
+    <Compile Include="Assets\Scripts\Utility\GameObjectTool.cs" />
+    <Compile Include="Assets\Scripts\Utility\MyUtility.cs" />
+    <Compile Include="Assets\Scripts\Utility\ScriptTool.cs" />
+    <Compile Include="Assets\Scripts\Utility\Singleton.cs" />
     <None Include="Assets\Documents\参考网站.txt" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>D:/My Documents/My Projects/Unity Projects/Tutorial/DarkSouls_Work/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>

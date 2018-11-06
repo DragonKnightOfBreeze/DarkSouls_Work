@@ -29,8 +29,6 @@ namespace DSWork {
 		}
 
 		private void OnAnimatorMove() {
-//			Vector3 temp = animator.deltaPosition;
-//			print(temp.x);
 			//传递相对位置
 			RMUpdateEvent?.Invoke(animator.deltaPosition);
 		}

@@ -1,4 +1,5 @@
 //TODO：需要自己用手柄调试，看看输入是否正确
+//TODO：重构：JInput重命名
 
 namespace DSWork.Global {
 	public class GameEnum { }
@@ -7,67 +8,69 @@ namespace DSWork.Global {
 
 	/// <summary>键鼠输入</summary>
 	/// <remarks>需要在InputManager中妥善配置</remarks>
-	public enum KMInput {
+	public enum KInput {
 		/// <summary>向前移动</summary>
-		KW_Forward,
+		Forward,
 		/// <summary>向后移动</summary>
-		KW_Back,
+		Back,
 		/// <summary>向左移动</summary>
-		KW_Left,
+		Left,
 		/// <summary>向右移动</summary>
-		KW_Right,
+		Right,
 		/// <summary>视角向上移动</summary>
-		KW_VUp,
+		VUp,
 		/// <summary>视角向下移动</summary>
-		KW_VDown,
+		VDown,
 		/// <summary>视角向左移动</summary>
-		KW_VLeft,
+		VLeft,
 		/// <summary>视角向下移动</summary>
-		KW_VRight,
+		VRight,
 
 		/// <summary>切换魔法</summary>
-		KW_ToggleMagic,
+		ToggleMagic,
 		/// <summary>切换道具</summary>
-		KW_ToggleItem,
+		ToggleItem,
 		/// <summary>切换左手武器</summary>
-		KW_ToggleLHand,
+		ToggleLHand,
 		/// <summary>切换右手武器</summary>
-		KW_ToggleRHand,
-
+		ToggleRHand,
 
 		/// <summary>奔跑</summary>
-		KW_Run,
-		/// <summary>闪避（后跃/翻滚/跳跃）</summary>
-		KW_Dodge,
+		Run,
+		/// <summary>闪避（后跃/翻滚）</summary>
+		Dodge,
+		/// <summary>跳跃</summary>
+		Jump,
 		/// <summary>使用物品</summary>
-		KW_UseItem,
+		UseItem,
 		/// <summary>互动</summary>
-		KW_Interact,
+		Interact,
+		/// <summary>切换武器持有方式</summary>
+		ToggleHold,
 
 		/// <summary>左手主要动作</summary>
-		KW_LHandAct1,
+		LHandAct1,
 		/// <summary>左手次要动作</summary>
-		KW_LHandAct2,
+		LHandAct2,
 		/// <summary>右手主要动作</summary>
-		KW_RHandAct1,
+		RHandAct1,
 		/// <summary>右手次要动作</summary>
-		KW_RHandAct2,
+		RHandAct2,
 
 		/// <summary>静步</summary>
-		KW_Walk,
+		Walk,
 		/// <summary>目标锁定/视角重置</summary>
-		KW_Lock,
-
+		Lock,
 		/// <summary>打开菜单</summary>
-		KW_Menu,
+		Menu,
 		/// <summary>打开次要菜单</summary>
-		KW_SecMenu
+		SecMenu
 	}
 
 
 	/// <summary>手柄输入</summary>
 	/// <remarks>需要在InputManager中妥善配置</remarks>
-	public enum JSInput {
+	public enum JInput {
 		/// <summary>左右移动</summary>
 		JS_LeftAxis_X,
 		/// <summary>前后移动</summary>
@@ -109,6 +112,20 @@ namespace DSWork.Global {
 
 	#endregion
 
+	
+	public enum Layer {
+		Default = 0,
+		TransparentFX = 1,
+		Ignore__Raycast = 2,
+		Water = 4,
+		UI = 5,
+		
+		PostProcessing = 8,
+		Ground = 9,
+		Weapon = 10,
+		Enemy = 11
+	}
+	
 
 	#region ［玩家的动画状态机］
 
@@ -144,7 +161,9 @@ namespace DSWork.Global {
 	/// <summary>玩家的FSM参数</summary>
 	public enum PlayerFSMParam {
 		forward,
-		jab_roll_jump,
+		right,
+		dodge,
+		jump,
 		isOnGround,
 		fallRoll,
 		attack,
