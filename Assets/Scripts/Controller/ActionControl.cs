@@ -283,24 +283,23 @@ namespace DSWork {
 
 
 			//攻击层级的待机状态的相关事件
-			animator.GetBehaviour<FSMEvents_L1_Idle>().OnEnterEvent += () => StateInitChangeLayer(0.0f);
-			animator.GetBehaviour<FSMEvents_L1_Idle>().OnUpdateEvent += () => StateChangeLayer(EPlayer.FSMLayer.AttackLayer);
+			animator.GetBehaviour<FSMEvents_RHand_Idle>().OnEnterEvent += () => StateInitChangeLayer(0.0f);
+			animator.GetBehaviour<FSMEvents_RHand_Idle>().OnUpdateEvent += () => StateChangeLayer(EPlayer.FSMLayer.AttackLayer);
 
 			//单手攻击状态的相关事件
-			animator.GetBehaviour<FSMEvents_L1_1Hand_Slash>().OnEnterEvent += () => StateInitChangeLayer(1.0f);
-			animator.GetBehaviour<FSMEvents_L1_1Hand_Slash>().OnUpdateEvent += () => {
+			animator.GetBehaviour<FSMEvents_RHand_Slash>().OnEnterEvent += () => StateInitChangeLayer(1.0f);
+			animator.GetBehaviour<FSMEvents_RHand_Slash>().OnUpdateEvent += () => {
 				StateSetSpeed(0f, EPlayer.FSMCurve.spd_Atk_1H_Slash1_Z);
 				StateChangeLayer(EPlayer.FSMLayer.AttackLayer);
 			};
 
-
 			//防御层级的待机状态的相关事件
-			animator.GetBehaviour<FSMEvents_L2_Idle>().OnEnterEvent += () => StateInitChangeLayer(0.0f);
-			animator.GetBehaviour<FSMEvents_L2_Idle>().OnUpdateEvent += () => StateChangeLayer(EPlayer.FSMLayer.DefenseLayer);
+			animator.GetBehaviour<FSMEvents_LHand_Idle>().OnEnterEvent += () => StateInitChangeLayer(0.0f);
+			animator.GetBehaviour<FSMEvents_LHand_Idle>().OnUpdateEvent += () => StateChangeLayer(EPlayer.FSMLayer.DefenseLayer);
 
 			//单手防御状态的相关事件
-			animator.GetBehaviour<FSMEvents_L2_1Hand_ShieldUp>().OnEnterEvent += () => StateInitChangeLayer(1.0f);
-			animator.GetBehaviour<FSMEvents_L2_1Hand_ShieldUp>().OnUpdateEvent += () => StateChangeLayer(EPlayer.FSMLayer.DefenseLayer);
+			animator.GetBehaviour<FSMEvents_LHand_ShieldUp>().OnEnterEvent += () => StateInitChangeLayer(1.0f);
+			animator.GetBehaviour<FSMEvents_LHand_ShieldUp>().OnUpdateEvent += () => StateChangeLayer(EPlayer.FSMLayer.DefenseLayer);
 		}
 
 		/// <summary>使输入失效，锁定攻击，且锁定平面移动</summary>
@@ -381,7 +380,7 @@ namespace DSWork {
 		/// <remarks>仅在第三段攻击时应用</remarks>
 		/// <param name="deltaPosObj"></param>
 		private void OnRMUpdate(object deltaPosObj) {
-			if(CheckState(EPlayer.FSMState.__1Hand_Slash3, EPlayer.FSMLayer.AttackLayer))
+			if(CheckState(EPlayer.FSMState.RHand_Slash3, EPlayer.FSMLayer.AttackLayer))
 				deltaPos += 0.5f * deltaPos + 0.5f * (Vector3) deltaPosObj;
 		}
 

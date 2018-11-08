@@ -161,6 +161,7 @@ namespace DSWork.Global {
 
 	/// <summary>玩家的枚举类</summary>
 	public static class EPlayer {
+		
 		/// <summary>玩家的FSM层级</summary>
 		public enum FSMLayer {
 			BaseLayer,
@@ -171,22 +172,19 @@ namespace DSWork.Global {
 
 		/// <summary>玩家的FSM状态</summary>
 		public enum FSMState {
-//			Idle,
-//			Walk,
-//			Run,
-
 			OnGround,
-			Dodge,
 			Roll,
+			Jab,
 			Jump,
 			Fall,
 
-			Idle,
-			__1Hand_Slash1,
-			__1Hand_Slash2,
-			__1Hand_Slash3,
-
-			__1Hand_ShieldUp
+			RHand_Idle,
+			RHand_Slash1,
+			RHand_Slash2,
+			RHand_Slash3,
+			
+			LHand_Idle,
+			LHand_ShieldUp
 		}
 
 

@@ -1,32 +1,14 @@
-/*******
- * ［概述］
- * 
- * 
- * ［用法］
- * 
- * 
- * ［备注］ 
- * 
- * 
- * 项目：《黑暗之魂》复刻教程
- * 作者：微风的龙骑士 风游迩
- */
-
 using System;
-using System.CodeDom;
-using DSWork.Global;
-using UnityEngine;
 
 namespace DSWork.Utility {
-	/// <summary>枚举类型的拓展类</summary>
-	public static class EnumTool {
-		
+	/// <summary>枚举类型拓展类</summary>
+	public static class EnumExt {
 		private const string REP_Num = "__";
 		private const string REP_Space = "__";
-		private const string REP_Sep = "SP"; 
-		
-		
-		/// <summary>枚举值转为字符串</summary>
+		private const string REP_Sep = "SP";
+
+
+		/// <summary>将枚举值转换为字符串。适配多种特殊情况。</summary>
 		/// <remarks>（默认）如果要以数字开头："__1Str" -> "1Str"；</remarks>
 		/// <remarks>（默认）如果要包含空格："Str__Str" -> "Str Str"；</remarks>
 		/// <remarks>（默认）如果要包含路径分隔符："StrSPStr" -> "Str/Str"。</remarks>
@@ -41,10 +23,5 @@ namespace DSWork.Utility {
 				s = s.Replace(REP_Sep, "/");
 			return s;
 		}
-
-
-		
-		
-
 	}
 }

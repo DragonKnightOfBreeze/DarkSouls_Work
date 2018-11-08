@@ -1,10 +1,9 @@
 using DSWork.Global;
 using UnityEngine;
-using UnityEngine.Animations;
 
 namespace DSWork {
 	/// <summary>挂载在某一动画状态上，以使进入该动画状态时，可以自动调用指定的方法。</summary>
-	/// <remarks>子类基本上什么都不用写</remarks>
+	/// <remarks>子类基本上什么都不用写。</remarks>
 	public class FSMEvents : StateMachineBehaviour {
 		public event FSMDelegate OnEnterEvent;
 		public event FSMDelegate OnExitEvent;
@@ -22,5 +21,6 @@ namespace DSWork {
 		public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
 			OnUpdateEvent?.Invoke();
 		}
+	
 	}
 }

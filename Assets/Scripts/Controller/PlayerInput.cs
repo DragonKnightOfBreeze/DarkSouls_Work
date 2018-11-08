@@ -114,11 +114,13 @@ namespace DSWork {
 		/// <summary>是否使用键鼠</summary>
 		public bool UseKM = true;
 
+		private GameObject model;
+		
 		private float velocityDForward;
 		private float velocityDRight;
 		private readonly float smoothTime = 0.1f;
 
-		private GameObject model;
+		
 
 		#endregion
 

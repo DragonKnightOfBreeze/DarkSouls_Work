@@ -9,7 +9,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{FDF2C2A2-B12A-6FC2-7622-AD03E887F607}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -54,6 +55,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Utility\AnimatorExt.cs" />
+    <Compile Include="Assets\Scripts\Utility\ReflectionTool.cs" />
     <Compile Include="Assets\Scripts\_Deprecated\FSMOnEnter.cs" />
     <Compile Include="Assets\Scripts\_Deprecated\FSMOnExit.cs" />
     <Compile Include="Assets\Scripts\_Deprecated\FSMOnUpdate.cs" />
@@ -68,30 +71,39 @@
     <Compile Include="Assets\Scripts\FSMEvents\FSMEvents_Fall.cs" />
     <Compile Include="Assets\Scripts\FSMEvents\FSMEvents_Jab.cs" />
     <Compile Include="Assets\Scripts\FSMEvents\FSMEvents_Jump.cs" />
-    <Compile Include="Assets\Scripts\FSMEvents\FSMEvents_L1_1Hand_Slash.cs" />
-    <Compile Include="Assets\Scripts\FSMEvents\FSMEvents_L1_Idle.cs" />
-    <Compile Include="Assets\Scripts\FSMEvents\FSMEvents_L2_1Hand_ShieldUp.cs" />
-    <Compile Include="Assets\Scripts\FSMEvents\FSMEvents_L2_Idle.cs" />
+    <Compile Include="Assets\Scripts\FSMEvents\FSMEvents_RHand_Slash.cs" />
+    <Compile Include="Assets\Scripts\FSMEvents\FSMEvents_RHand_Idle.cs" />
+    <Compile Include="Assets\Scripts\FSMEvents\FSMEvents_LHand_ShieldUp.cs" />
+    <Compile Include="Assets\Scripts\FSMEvents\FSMEvents_LHand_Idle.cs" />
     <Compile Include="Assets\Scripts\FSMEvents\FSMEvents_OnGround.cs" />
     <Compile Include="Assets\Scripts\FSMEvents\FSMEvents_Roll.cs" />
     <Compile Include="Assets\Scripts\Global\GameConst.cs" />
     <Compile Include="Assets\Scripts\Global\GameDelegate.cs" />
     <Compile Include="Assets\Scripts\Global\GameEnum.cs" />
     <Compile Include="Assets\Scripts\Global\GlobalSetting.cs" />
-    <Compile Include="Assets\Scripts\Input\IMyAxis.cs" />
-    <Compile Include="Assets\Scripts\Input\IMyButton.cs" />
-    <Compile Include="Assets\Scripts\Input\MyAxis.cs" />
-    <Compile Include="Assets\Scripts\Input\MyButton.cs" />
+    <Compile Include="Assets\Scripts\MyInput\IMyAxis.cs" />
+    <Compile Include="Assets\Scripts\MyInput\IMyButton.cs" />
+    <Compile Include="Assets\Scripts\MyInput\MyAxis.cs" />
+    <Compile Include="Assets\Scripts\MyInput\MyButton.cs" />
     <Compile Include="Assets\Scripts\LeftArmAnimFix.cs" />
     <Compile Include="Assets\Scripts\MyTimer.cs" />
     <Compile Include="Assets\Scripts\RootMotionControl.cs" />
-    <Compile Include="Assets\Scripts\Utility\BoolTool.cs" />
-    <Compile Include="Assets\Scripts\Utility\EnumTool.cs" />
-    <Compile Include="Assets\Scripts\Utility\GameObjectTool.cs" />
-    <Compile Include="Assets\Scripts\Utility\MyUtility.cs" />
+    <Compile Include="Assets\Scripts\Utility\BoolExt.cs" />
+    <Compile Include="Assets\Scripts\Utility\EnumExt.cs" />
+    <Compile Include="Assets\Scripts\Utility\GameObjectExt.cs" />
     <Compile Include="Assets\Scripts\Utility\NoDestroyOnLoad.cs" />
     <Compile Include="Assets\Scripts\Utility\ScriptTool.cs" />
     <Compile Include="Assets\Scripts\Utility\Singleton.cs" />
+    <Compile Include="Assets\Scripts\_Refactoring\InputMgr\FullButton.cs" />
+    <Compile Include="Assets\Scripts\_Refactoring\InputMgr\IInput.cs" />
+    <Compile Include="Assets\Scripts\_Refactoring\InputMgr\InputEnum.cs" />
+    <Compile Include="Assets\Scripts\_Refactoring\InputMgr\SimpleAxis.cs" />
+    <Compile Include="Assets\Scripts\_Refactoring\InputMgr\SimpleButton.cs" />
+    <Compile Include="Assets\Scripts\_Refactoring\VInput\BaseInput.cs" />
+    <Compile Include="Assets\Scripts\_Refactoring\VInput\InputManager.cs" />
+    <Compile Include="Assets\Scripts\_Refactoring\VInput\Joystick.cs" />
+    <Compile Include="Assets\Scripts\_Refactoring\VInput\JoystickInput.cs" />
+    <Compile Include="Assets\Scripts\_Refactoring\VInput\KeyboardInput.cs" />
     <None Include="Assets\Documents\参考网站.txt" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>D:/My Documents/My Projects/Unity Projects/Tutorial/DarkSouls_Work/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
@@ -667,5 +679,8 @@
     <Reference Include="Microsoft.CSharp">
       <HintPath>D:\Unity3D\2018.1.6f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Microsoft.CSharp.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets\Scripts\_Refactoring" />
   </ItemGroup>
 </Project>

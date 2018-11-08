@@ -17,22 +17,16 @@ using UnityEngine;
 
 namespace DSWork {
 	public class MyTimer {
-		
 		public enum State {
-			Idle,
-			Run,
-			Finished
+			Finished,
+			Run
 		}
 
 		public State curState;
-		
-		/// <summary>
-		/// 持续的时间
-		/// </summary>
+
+		/// <summary>持续的时间</summary>
 		public float duration;
-		/// <summary>
-		/// 流逝的时间
-		/// </summary>
+		/// <summary>流逝的时间</summary>
 		private float elapsedTime;
 
 		public void Tick() {
@@ -42,7 +36,7 @@ namespace DSWork {
 					curState = State.Finished;
 			}
 		}
-		
+
 		public void StartTimer(float duration = 0.2f) {
 			this.duration = duration;
 			elapsedTime = 0;
