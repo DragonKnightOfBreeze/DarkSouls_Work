@@ -30,7 +30,7 @@ namespace DSWork.Utility {
 		/// <remarks>（默认）如果要以数字开头："__1Str" -> "1Str"；</remarks>
 		/// <remarks>（默认）如果要包含空格："Str__Str" -> "Str Str"；</remarks>
 		/// <remarks>（默认）如果要包含路径分隔符："StrSPStr" -> "Str/Str"。</remarks>
-		/// <param name="s">附加的枚举值</param>
+		/// <param name="e">附加的枚举值</param>
 		public static string TS(this Enum e) {
 			string s = e.ToString();
 			if(s.StartsWith(REP_Num, StringComparison.Ordinal))

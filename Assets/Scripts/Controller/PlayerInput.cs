@@ -22,26 +22,29 @@
  * 项目：《黑暗之魂》复刻教程
  * 作者：微风的龙骑士 风游迩
  */
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DSWork.Global;
 using DSWork.Utility;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
 
 namespace DSWork {
 	/// <summary>玩家输入模块</summary>
 	public class PlayerInput : MonoBehaviour {
 		[HideInInspector]
-		public Dictionary<KInput, MyButton> KButtonDict;
+		public Dictionary<KButton, IMyButton> KButtonDict;
 		[HideInInspector]
-		public Dictionary<JInput, MyButton> JButtonDict;
+		public Dictionary<KAxis, IMyAxis> KAxisDict;
+		[HideInInspector]
+		public Dictionary<JButton, IMyButton> JButtonDict;
+		[HideInInspector]
+		public Dictionary<JAxis, IMyAxis> JAxisDict;
 
 		# region ［输入信号］
 
 		/// <summary>持续信号：玩家前后移动</summary>
-		[Header("输入信号")]
+		[Header("【输入信号】")]
 		[SerializeField]
 		private float Sgn_Forward;
 		/// <summary>持续信号：左右移动</summary>
@@ -97,47 +100,32 @@ namespace DSWork {
 
 		#region ［变量和属性］
 
-		[Header("处理后的信号")]
+		[Header("【处理后的信号】")]
 		public float DForward;
 		public float DRight;
-		/// <summary>原点到二维信号的距离</summary>
+		/// <summary>移动方向向量的模长，原点到二维信号的距离</summary>
 		public float DMag;
 		/// <summary>移动方向向量</summary>
 		public Vector3 DVec;
 
 		/// <summary>是否启用模块</summary>
-		[Header("其他")]
-		public bool inputEnabled = true;
-		public bool useKM = true;
+		[Header("【其他】")]
+		public bool EnableInput = true;
+		/// <summary>是否使用键鼠</summary>
+		public bool UseKM = true;
 
-		//二维信号的移动速度
 		private float velocityDForward;
 		private float velocityDRight;
-		//平滑变换时间
 		private readonly float smoothTime = 0.1f;
 
 		private GameObject model;
 
 		#endregion
 
+		
 		private void Awake() {
-			KButtonDict = new Dictionary<KInput, MyButton> {
-				[KInput.Run] = new MyButton(),
-				[KInput.Dodge] = new MyButton(),
-				[KInput.Interact] = new MyButton(),
-				[KInput.UseItem] = new MyButton(),
-				[KInput.ToggleHold] = new MyButton(),
-				[KInput.LHandAct1] = new MyButton(),
-				[KInput.LHandAct2] = new MyButton(),
-				[KInput.RHandAct1] = new MyButton(),
-				[KInput.RHandAct2] = new MyButton(),
-				[KInput.Walk] = new MyButton(),
-				[KInput.Lock] = new MyButton(),
-				[KInput.Menu] = new MyButton(),
-				[KInput.SecMenu] = new MyButton()
-			};
-
-			model = GameObject.FindWithTag("Player");
+			InitInputDict();
+			model = GameObject.FindWithTag(Tag.Player.TS());
 		}
 
 		private void OnEnable() {
@@ -146,87 +134,121 @@ namespace DSWork {
 
 
 		#region ［得到用户输入］
-
+		
+		/// <summary>
+		/// 初始化输入字典
+		/// </summary>
+		private void InitInputDict() {
+			KAxisDict = new Dictionary<KAxis, IMyAxis> {
+				[KAxis.Forward] = new MyAxis(KAxis.Forward.TS(),KAxis.Back.TS()),
+				[KAxis.Right] = new MyAxis(KAxis.Right.TS(),KAxis.Left.TS()),
+				[KAxis.VUp] = new MyAxis(KAxis.VUp.TS(),KAxis.VDown.TS()),
+				[KAxis.VRight] = new MyAxis(KAxis.VRight.TS(),KAxis.VLeft.TS())
+			};
+			
+			KButtonDict = new Dictionary<KButton, IMyButton>();
+			foreach(KButton ev in Enum.GetValues(typeof(KButton)))
+				KButtonDict.Add(ev,new MyButton(ev.TS()));
+			
+			JAxisDict = new Dictionary<JAxis, IMyAxis>();
+			foreach(JAxis ev in Enum.GetValues(typeof(JAxis)))
+				JAxisDict.Add(ev,new MyAxis(ev.TS()));
+			
+			JButtonDict = new Dictionary<JButton, IMyButton>();
+			foreach(JButton ev in Enum.GetValues(typeof(JButton)))
+				JButtonDict.Add(ev,new MyButton(ev.TS()));
+		}
+		
+		/// <summary>
+		/// 协程：得到用户输入
+		/// </summary>
+		/// <returns></returns>
 		private IEnumerator GetInputCr() {
 			while(true) {
-				foreach(var button in KButtonDict)
-					button.Value.Tick(Input.GetButton(button.Key.TS()));
-
-				if(useKM)
-					GetInput_KM();
-				else
-					GetInput_JS();
-				HandleInput();
 				yield return new WaitForSeconds(0.02f);
+				if(!EnableInput)
+					continue;
+				
+				//遍历计时，然后得到用户输入
+				if(UseKM) {
+					foreach(var axis in KAxisDict)
+						axis.Value.Tick();
+					foreach(var button in KButtonDict)
+						button.Value.Tick();
+					GetInput_KM();
+				}
+				else {
+					foreach(var axis in KAxisDict)
+						axis.Value.Tick();
+					foreach(var button in JButtonDict)
+						button.Value.Tick();
+					GetInput_JS();
+				}
+				HandleInput();
+
 			}
 		}
 
 
 		/// <summary>得到用户输入（键鼠）</summary>
 		private void GetInput_KM() {
-			if(!inputEnabled)
-				return;
+			//处理输入信号
+			Sgn_Forward = KAxisDict[KAxis.Forward].AxisValue;
+			Sgn_Right = KAxisDict[KAxis.Right].AxisValue;
+			Sgn_VUp = KAxisDict[KAxis.VUp].AxisValue;
+			Sgn_VRight = KAxisDict[KAxis.VRight].AxisValue;
 
-			//计算二维信号的目标位置
-			Sgn_Forward = Input.GetButton(KInput.Forward.TS()).To1_0() - Input.GetButton(KInput.Back.TS()).To1_0();
-			Sgn_Right = Input.GetButton(KInput.Right.TS()).To1_0() - Input.GetButton(KInput.Left.TS()).To1_0();
-			Sgn_VUp = Input.GetAxis(KInput.VUp.TS()) * GlobalSetting.CameraRotationSpeed;
-			Sgn_VRight = Input.GetAxis(KInput.VRight.TS()) * GlobalSetting.CameraRotationSpeed;
-
-			//计算其他信号
-			Sgn_Run = KButtonDict[KInput.Run].FullDelayPress();
-			Sgn_Jump = KButtonDict[KInput.Dodge].DoublePress();
-			Sgn_Dodge = KButtonDict[KInput.Jump].QuickPress();
-			Sgn_Interact = KButtonDict[KInput.Interact].PressDown;
-			Sgn_UseItem = KButtonDict[KInput.UseItem].PressDown;
-			Sgn_ToggleHold = KButtonDict[KInput.ToggleHold].PressDown;
-
+			Sgn_Run = ((MyButton)KButtonDict[KButton.Run]).FullDelayPress();
+			Sgn_Jump = KButtonDict[KButton.Dodge].DoublePress();
+			Sgn_Dodge = KButtonDict[KButton.Jump].QuickPress();
+			Sgn_Interact = KButtonDict[KButton.Interact].PressDown;
+			Sgn_UseItem = KButtonDict[KButton.UseItem].PressDown;
+			Sgn_ToggleHold = KButtonDict[KButton.ToggleHold].PressDown;
 			//TODO：重构：信号的触发方式也是不固定的，与动作和技能有关
-			Sgn_LHandAct1 = KButtonDict[KInput.LHandAct1].Press;     //防御
-			Sgn_LHandAct2 = KButtonDict[KInput.LHandAct2].PressDown; //武器战技
-			Sgn_RHandAct1 = KButtonDict[KInput.RHandAct1].PressDown; //普通攻击	
-			Sgn_RHandAct2 = KButtonDict[KInput.RHandAct2].Press;     //重攻击
-	
-			//DONE：补充代码
-			Sgn_Walk = KButtonDict[KInput.Walk].PressDown;
-			Sgn_Lock = KButtonDict[KInput.Lock].PressDown;
-			Sgn_Menu = KButtonDict[KInput.Menu].PressDown;
-			Sgn_SecMenu = KButtonDict[KInput.SecMenu].PressDown;
+			Sgn_LHandAct1 = KButtonDict[KButton.LHandAct1].Press;     //防御
+			Sgn_LHandAct2 = KButtonDict[KButton.LHandAct2].PressDown; //武器战技
+			Sgn_RHandAct1 = KButtonDict[KButton.RHandAct1].PressDown; //普通攻击	
+			Sgn_RHandAct2 = KButtonDict[KButton.RHandAct2].Press;     //重攻击
+
+			Sgn_Walk = KButtonDict[KButton.Walk].PressDown;
+			Sgn_Lock = KButtonDict[KButton.Lock].PressDown;
+			Sgn_Menu = KButtonDict[KButton.Menu].PressDown;
+			Sgn_SecMenu = KButtonDict[KButton.SecMenu].PressDown;
 		}
 
 
 		/// <summary>得到用户输入（手柄）</summary>
 		private void GetInput_JS() {
-			if(!inputEnabled)
+			if(!EnableInput)
 				return;
 
 			//计算二维信号的目标位置
-			Sgn_Forward = Input.GetAxis(JInput.JS_LeftAxis_Y.TS());
-			Sgn_Right = Input.GetAxis(JInput.JS_LeftAxis_X.TS());
+			Sgn_Forward =  JAxisDict[JAxis.J_Forward_Back].AxisValue;
+			Sgn_Right = JAxisDict[JAxis.J_Right_Left].AxisValue;
 			//计算视角移动的信号
-			Sgn_VUp = Input.GetAxis(JInput.JS_RightAxis_Y.TS()) * GlobalSetting.CameraRotationSpeed;
-			Sgn_VRight = Input.GetAxis(JInput.JS_RightAxis_X.TS()) * GlobalSetting.CameraRotationSpeed;
+			Sgn_VUp = JAxisDict[JAxis.J_VUp_Down].AxisValue * GlobalSetting.CameraRotationSpeed;
+			Sgn_VRight = JAxisDict[JAxis.J_VRight_Left].AxisValue * GlobalSetting.CameraRotationSpeed;
 
 			//计算其他信号
-			Sgn_Run = Input.GetButton(JInput.JS_Button0.TS());
-			Sgn_Dodge = Input.GetButtonUp(JInput.JS_Button0.TS());
-			Sgn_Interact = Input.GetButtonDown(JInput.JS_Button1.TS());
-			Sgn_UseItem = Input.GetButtonDown(JInput.JS_Button2.TS());
-			Sgn_ToggleHold = Input.GetButtonDown(JInput.JS_Button3.TS());
+			Sgn_Run = Input.GetButton(JButton.J_Run.TS());
+			Sgn_Dodge = Input.GetButtonUp(JButton.J_Run.TS());
+			Sgn_Interact = Input.GetButtonDown(JButton.J_Dodge.TS());
+			Sgn_UseItem = Input.GetButtonDown(JButton.J_Interact.TS());
+			Sgn_ToggleHold = Input.GetButtonDown(JButton.J_ToggleHold.TS());
 
-			Sgn_RHandAct1 = Input.GetButtonDown(JInput.JS_RB.TS());
-			Sgn_LHandAct1 = Input.GetButton(JInput.JS_LB.TS());
+			Sgn_RHandAct1 = Input.GetButtonDown(JButton.J_LHandAct2.TS());
+			Sgn_LHandAct1 = Input.GetButton(JButton.J_LHandAct1.TS());
 			//TODO：补充代码
 		}
-		
+
 		#endregion
 
-		
+
 		#region ［其他私有方法］
 
 		/// <summary>处理用户输入</summary>
 		private void HandleInput() {
-			if(!inputEnabled)
+			if(!EnableInput)
 				return;
 
 			//计算真正的二维信号（对于目标位置，按照移动速度）
@@ -239,7 +261,7 @@ namespace DSWork {
 			DRight = tempDAxis.x;
 
 			DMag = Mathf.Sqrt(DForward * DForward + DRight * DRight);
-			//TODO：如果要和黑魂中的设计一致，仅需这里，参考的正方向应该是相机的正方形
+			//TODO：如果要和黑魂中的设计一致，仅需这里，参考的正方向应该是相机的正方向
 			//cameraControl.CameraYForward
 			DVec = DRight * model.transform.right + DForward * model.transform.forward;
 		}
@@ -253,7 +275,7 @@ namespace DSWork {
 			output.y = input.y * Mathf.Sqrt(1 - input.x * input.x / 2.0f);
 			return output;
 		}
-		
+
 		#endregion
 	}
 }

@@ -10,6 +10,10 @@
  * ［用法］
  * 
  * ［备注］
+ * RigidBody不应该在update方法中调用
+ * rigid.position = planerMoveSpeed * Time.fixedDeltaTime;
+ * rigid.velocity = planerMoveSpeed; 	//会覆盖y值
+ * 
  * Physics.OverlapCapsule()：检测胶囊体的碰撞。
  *
  * 更好的控制特殊FSM状态时的角色的位移速度的方法：
@@ -103,11 +107,6 @@ namespace DSWork {
 			model.GetComponent<RootMotionControl>().RMUpdateEvent += OnRMUpdate;
 		}
 
-		//RigidBody不应该在update方法中调用
-		//rigid.position = planerMoveSpeed * Time.fixedDeltaTime;
-		//rigid.velocity = planerMoveSpeed; 	//会覆盖y值
-
-
 		private void OnEnable() {
 			StartCoroutine(PlayerActionCr());
 		}
@@ -142,9 +141,9 @@ namespace DSWork {
 			if(!cameraControl.LockState) {
 				//设置FSM混合参数（在待机、移动、奔跑状态之间切换）
 				//利用插值函数实现平滑过渡效果，每一次过渡一半。
-				float tempMultiply = pi.DMag * Mathf.Lerp(animator.GetFloat(PlayerFSMParam.forward.TS()),pi.Sgn_Run.To2_1(), 0.5f);
-				animator.SetFloat(PlayerFSMParam.forward.TS(), tempMultiply);
-				animator.SetFloat(PlayerFSMParam.forward.TS(), 0);
+				float tempMultiply = pi.DMag * Mathf.Lerp(animator.GetFloat(EPlayer.FSMParam.forward.TS()),pi.Sgn_Run.To2_1(), 0.5f);
+				animator.SetFloat(EPlayer.FSMParam.forward.TS(), tempMultiply);
+				animator.SetFloat(EPlayer.FSMParam.forward.TS(), 0);
 				
 				//设置方向（旋转）
 				if(pi.DMag > 0.1f) {
@@ -161,8 +160,8 @@ namespace DSWork {
 			//如果处于锁定状态
 			else {
 				var localDVec = transform.InverseTransformVector(pi.DVec);
-				animator.SetFloat(PlayerFSMParam.forward.TS(),localDVec.z * pi.Sgn_Run.To2_1());
-				animator.SetFloat(PlayerFSMParam.right.TS(),localDVec.x * pi.Sgn_Run.To2_1());
+				animator.SetFloat(EPlayer.FSMParam.forward.TS(),localDVec.z * pi.Sgn_Run.To2_1());
+				animator.SetFloat(EPlayer.FSMParam.right.TS(),localDVec.x * pi.Sgn_Run.To2_1());
 				
 				//设置方向（旋转）
 				//如果不需要跟踪方向（使在闪避时，以人物的移动方向为基准）
@@ -194,26 +193,27 @@ namespace DSWork {
 			
 			//跳跃
 			if(pi.Sgn_Jump)
-				animator.SetTrigger(PlayerFSMParam.jump.TS());
+				animator.SetTrigger(EPlayer.FSMParam.jump.TS());
 			//闪避
 			else if(pi.Sgn_Dodge)
-				animator.SetTrigger(PlayerFSMParam.dodge.TS());
+				animator.SetTrigger(EPlayer.FSMParam.dodge.TS());
 
 			//攻击
 			if(pi.Sgn_RHandAct1 && !lockAction)
-				animator.SetTrigger(PlayerFSMParam.attack.TS());
+				animator.SetTrigger(EPlayer.FSMParam.attack.TS());
 			//防御
 			else if(pi.Sgn_LHandAct1 && !lockAction)
-				animator.SetBool(PlayerFSMParam.defense.TS(), true);
+				animator.SetBool(EPlayer.FSMParam.defense.TS(), true);
 			else if(pi.Sgn_LHandAct1 && !lockAction)
-				animator.SetBool(PlayerFSMParam.defense.TS(), false);
+				animator.SetBool(EPlayer.FSMParam.defense.TS(), false);
 		}
 
+		
 		/// <summary>角色的下落翻滚控制</summary>
 		/// <remarks>如果下落速度很快，则需要在落地时进行一次翻滚</remarks>
 		private void PlayerFallRoll() {
 			if(cc.velocity.magnitude >= 4.0f)
-				animator.SetTrigger(PlayerFSMParam.fallRoll.TS());
+				animator.SetTrigger(EPlayer.FSMParam.fallRoll.TS());
 		}
 
 
@@ -230,10 +230,10 @@ namespace DSWork {
 
 		/// <summary>着地检查</summary>
 		public void OnGroundCheck() {
-			if(!animator.GetBool(PlayerFSMParam.isOnGround.TS()) && cc.isGrounded)
-				animator.SetBool(PlayerFSMParam.isOnGround.TS(), true);
-			else if(animator.GetBool(PlayerFSMParam.isOnGround.TS()) && !cc.isGrounded)
-				animator.SetBool(PlayerFSMParam.isOnGround.TS(), false);
+			if(!animator.GetBool(EPlayer.FSMParam.isOnGround.TS()) && cc.isGrounded)
+				animator.SetBool(EPlayer.FSMParam.isOnGround.TS(), true);
+			else if(animator.GetBool(EPlayer.FSMParam.isOnGround.TS()) && !cc.isGrounded)
+				animator.SetBool(EPlayer.FSMParam.isOnGround.TS(), false);
 		}
 
 		#endregion
@@ -250,7 +250,7 @@ namespace DSWork {
 			};
 			animator.GetBehaviour<FSMEvents_Jab>().OnExitEvent += StateUnlock;
 			animator.GetBehaviour<FSMEvents_Jab>().OnUpdateEvent += () =>
-				StateSetSpeed(PlayerFSMCurve.spd_Jab_Y, PlayerFSMCurve.spd_Jab_Z);
+				StateSetSpeed(EPlayer.FSMCurve.spd_Jab_Y, EPlayer.FSMCurve.spd_Jab_Z);
 
 			//跳跃状态的相关事件
 			animator.GetBehaviour<FSMEvents_Jump>().OnEnterEvent += () => {
@@ -258,7 +258,7 @@ namespace DSWork {
 				trackDir = true;
 			};
 			animator.GetBehaviour<FSMEvents_Jump>().OnUpdateEvent += () =>
-				StateSetSpeed(PlayerFSMCurve.spd_Jump_Y, jumpSpeed_Z);
+				StateSetSpeed(EPlayer.FSMCurve.spd_Jump_Y, jumpSpeed_Z);
 			animator.GetBehaviour<FSMEvents_Jump>().OnExitEvent += StateUnlock;
 
 			//翻滚状态的相关事件
@@ -267,7 +267,7 @@ namespace DSWork {
 				trackDir = true;
 			};
 			animator.GetBehaviour<FSMEvents_Roll>().OnUpdateEvent += () =>
-				StateSetSpeed(PlayerFSMCurve.spd_Roll_Y, rollSpeed_Z);
+				StateSetSpeed(EPlayer.FSMCurve.spd_Roll_Y, rollSpeed_Z);
 			animator.GetBehaviour<FSMEvents_Roll>().OnExitEvent += StateUnlock;
 
 			//掉落状态的相关事件
@@ -283,36 +283,36 @@ namespace DSWork {
 
 
 			//攻击层级的待机状态的相关事件
-			animator.GetBehaviour<FSMEvents_L1_Idle>().OnEnterEvent += () => { StateInitChangeLayer(0.0f); };
-			animator.GetBehaviour<FSMEvents_L1_Idle>().OnUpdateEvent += () => { StateChangeLayer(PlayerFSMLayer.AttackLayer); };
+			animator.GetBehaviour<FSMEvents_L1_Idle>().OnEnterEvent += () => StateInitChangeLayer(0.0f);
+			animator.GetBehaviour<FSMEvents_L1_Idle>().OnUpdateEvent += () => StateChangeLayer(EPlayer.FSMLayer.AttackLayer);
 
 			//单手攻击状态的相关事件
-			animator.GetBehaviour<FSMEvents_L1_1Hand_Slash>().OnEnterEvent += () => { StateInitChangeLayer(1.0f); };
+			animator.GetBehaviour<FSMEvents_L1_1Hand_Slash>().OnEnterEvent += () => StateInitChangeLayer(1.0f);
 			animator.GetBehaviour<FSMEvents_L1_1Hand_Slash>().OnUpdateEvent += () => {
-				StateSetSpeed(0f, PlayerFSMCurve.spd_Atk_1H_Slash1_Z);
-				StateChangeLayer(PlayerFSMLayer.AttackLayer);
+				StateSetSpeed(0f, EPlayer.FSMCurve.spd_Atk_1H_Slash1_Z);
+				StateChangeLayer(EPlayer.FSMLayer.AttackLayer);
 			};
 
 
 			//防御层级的待机状态的相关事件
-			animator.GetBehaviour<FSMEvents_L2_Idle>().OnEnterEvent += () => { StateInitChangeLayer(0.0f); };
-			animator.GetBehaviour<FSMEvents_L2_Idle>().OnUpdateEvent += () => { StateChangeLayer(PlayerFSMLayer.DefenseLayer); };
+			animator.GetBehaviour<FSMEvents_L2_Idle>().OnEnterEvent += () => StateInitChangeLayer(0.0f);
+			animator.GetBehaviour<FSMEvents_L2_Idle>().OnUpdateEvent += () => StateChangeLayer(EPlayer.FSMLayer.DefenseLayer);
 
 			//单手防御状态的相关事件
-			animator.GetBehaviour<FSMEvents_L2_1Hand_ShieldUp>().OnEnterEvent += () => { StateInitChangeLayer(1.0f); };
-			animator.GetBehaviour<FSMEvents_L2_1Hand_ShieldUp>().OnUpdateEvent += () => { StateChangeLayer(PlayerFSMLayer.DefenseLayer); };
+			animator.GetBehaviour<FSMEvents_L2_1Hand_ShieldUp>().OnEnterEvent += () => StateInitChangeLayer(1.0f);
+			animator.GetBehaviour<FSMEvents_L2_1Hand_ShieldUp>().OnUpdateEvent += () => StateChangeLayer(EPlayer.FSMLayer.DefenseLayer);
 		}
 
 		/// <summary>使输入失效，锁定攻击，且锁定平面移动</summary>
 		private void StateLock() {
-			pi.inputEnabled = false;
+			pi.EnableInput = false;
 			lockMove = true;
 			lockAction = true;
 		}
 
 		/// <summary>重置冲量速度，使输入生效，解锁攻击，且解锁平面移动</summary>
 		private void StateUnlock() {
-			pi.inputEnabled = true;
+			pi.EnableInput = true;
 			lockMove = false;
 			lockAction = false;
 		}
@@ -327,21 +327,21 @@ namespace DSWork {
 		/// <summary>设置对应动画状态的Y轴曲线/固定速度，以及Z轴曲线/固定速度</summary>
 		/// <param name="speed_y">Y轴固定速度</param>
 		/// <param name="speed_z">Z轴曲线速度</param>
-		private void StateSetSpeed(float speed_y, PlayerFSMCurve speed_z) {
+		private void StateSetSpeed(float speed_y, EPlayer.FSMCurve speed_z) {
 			thrustVec = model.transform.up * speed_y + model.transform.forward * animator.GetFloat(speed_z.TS());
 		}
 
 		/// <summary>设置对应动画状态的Y轴曲线/固定速度，以及Z轴曲线/固定速度</summary>
 		/// <param name="speed_y">Y轴曲线速度</param>
 		/// <param name="speed_z">Z轴固定速度</param>
-		private void StateSetSpeed(PlayerFSMCurve speed_y, float speed_z) {
+		private void StateSetSpeed(EPlayer.FSMCurve speed_y, float speed_z) {
 			thrustVec = model.transform.up * animator.GetFloat(speed_y.TS()) + model.transform.forward * speed_z;
 		}
 
 		/// <summary>设置对应动画状态的Y轴曲线/固定速度，以及Z轴曲线/固定速度</summary>
 		/// <param name="speed_y">Y轴曲线速度</param>
 		/// <param name="speed_z">Z轴曲线速度</param>
-		private void StateSetSpeed(PlayerFSMCurve speed_y, PlayerFSMCurve speed_z) {
+		private void StateSetSpeed(EPlayer.FSMCurve speed_y, EPlayer.FSMCurve speed_z) {
 			thrustVec = model.transform.up * animator.GetFloat(speed_y.TS()) + model.transform.forward * animator.GetFloat(speed_z.TS());
 		}
 
@@ -355,7 +355,7 @@ namespace DSWork {
 		/// <remarks>思路：将指定层级的权重平滑增加到1.0/0</remarks>
 		/// <param name="layer">改变权重的层级</param>
 		/// <param name="lerpTime">插值时间</param>
-		private void StateChangeLayer(PlayerFSMLayer layer, float lerpTime = 0.4f) {
+		private void StateChangeLayer(EPlayer.FSMLayer layer, float lerpTime = 0.4f) {
 			//使用插值，平缓切换FSM层级
 			float curWeight = animator.GetLayerWeight(animator.GetLayerIndex(layer.TS()));
 			curWeight = Mathf.Lerp(curWeight, lerpTarget, lerpTime);
@@ -371,7 +371,7 @@ namespace DSWork {
 		/// <param name="stateName">指定的状态名称</param>
 		/// <param name="layerName">指定的层级名称</param>
 		/// <returns></returns>
-		private bool CheckState(PlayerFSMState stateName, PlayerFSMLayer layerName = PlayerFSMLayer.BaseLayer) {
+		private bool CheckState(EPlayer.FSMState stateName, EPlayer.FSMLayer layerName = EPlayer.FSMLayer.BaseLayer) {
 			int layerIndex = animator.GetLayerIndex(layerName.TS());
 			bool result = animator.GetCurrentAnimatorStateInfo(layerIndex).IsName(stateName.TS());
 			return result;
@@ -381,7 +381,7 @@ namespace DSWork {
 		/// <remarks>仅在第三段攻击时应用</remarks>
 		/// <param name="deltaPosObj"></param>
 		private void OnRMUpdate(object deltaPosObj) {
-			if(CheckState(PlayerFSMState.__1Hand_Slash3, PlayerFSMLayer.AttackLayer))
+			if(CheckState(EPlayer.FSMState.__1Hand_Slash3, EPlayer.FSMLayer.AttackLayer))
 				deltaPos += 0.5f * deltaPos + 0.5f * (Vector3) deltaPosObj;
 		}
 

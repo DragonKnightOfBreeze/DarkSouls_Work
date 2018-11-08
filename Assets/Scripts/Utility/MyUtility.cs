@@ -9,7 +9,7 @@ namespace DSWork.Utility {
 		/// <param name="stateName">指定的状态名称</param>
 		/// <param name="layerName">指定的层级名称</param>
 		/// <returns></returns>
-		private static bool CheckState(this Animator animator,PlayerFSMState stateName, PlayerFSMLayer layerName = PlayerFSMLayer.BaseLayer) {
+		private static bool CheckState(this Animator animator,EPlayer.FSMState stateName, EPlayer.FSMLayer layerName = EPlayer.FSMLayer.BaseLayer) {
 			int layerIndex = animator.GetLayerIndex(layerName.TS());
 			bool result = animator.GetCurrentAnimatorStateInfo(layerIndex).IsName(stateName.TS());
 			return result;

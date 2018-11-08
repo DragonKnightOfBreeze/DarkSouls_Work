@@ -2,13 +2,12 @@
 //TODO：重构：JInput重命名
 
 namespace DSWork.Global {
-	public class GameEnum { }
-
+	
 	#region ［输入］
 
-	/// <summary>键鼠输入</summary>
-	/// <remarks>需要在InputManager中妥善配置</remarks>
-	public enum KInput {
+	/// <summary>键鼠输入坐标</summary>
+	/// <remarks>需要在InputManager中妥善配置。</remarks>
+	public enum KAxis {
 		/// <summary>向前移动</summary>
 		Forward,
 		/// <summary>向后移动</summary>
@@ -24,8 +23,13 @@ namespace DSWork.Global {
 		/// <summary>视角向左移动</summary>
 		VLeft,
 		/// <summary>视角向下移动</summary>
-		VRight,
-
+		VRight
+	}
+	
+	
+	/// <summary>键鼠输入按钮</summary>
+	/// <remarks>需要在InputManager中妥善配置。</remarks>
+	public enum KButton {
 		/// <summary>切换魔法</summary>
 		ToggleMagic,
 		/// <summary>切换道具</summary>
@@ -37,7 +41,7 @@ namespace DSWork.Global {
 
 		/// <summary>奔跑</summary>
 		Run,
-		/// <summary>闪避（后跃/翻滚）</summary>
+		/// <summary>闪避</summary>
 		Dodge,
 		/// <summary>跳跃</summary>
 		Jump,
@@ -59,7 +63,7 @@ namespace DSWork.Global {
 
 		/// <summary>静步</summary>
 		Walk,
-		/// <summary>目标锁定/视角重置</summary>
+		/// <summary>锁定/重置视角</summary>
 		Lock,
 		/// <summary>打开菜单</summary>
 		Menu,
@@ -67,125 +71,154 @@ namespace DSWork.Global {
 		SecMenu
 	}
 
-
-	/// <summary>手柄输入</summary>
-	/// <remarks>需要在InputManager中妥善配置</remarks>
-	public enum JInput {
+	/// <summary>手柄输入坐标</summary>
+	/// <remarks>需要在InputManager中妥善配置。</remarks>
+	public enum JAxis {
 		/// <summary>左右移动</summary>
-		JS_LeftAxis_X,
+		J_Right_Left,
 		/// <summary>前后移动</summary>
-		JS_LeftAxis_Y,
+		J_Forward_Back,
 		/// <summary>视角左右移动</summary>
-		JS_RightAxis_X,
+		J_VRight_Left,
 		/// <summary>视角上下移动</summary>
-		JS_RightAxis_Y,
+		J_VUp_Down
+	}
+	
 
-		/// <summary>切换左手武器/右手武器</summary>
-		JS_Direction_X,
-		/// <summary>切换魔法/道具</summary>
-		JS_Direction_Y,
+	/// <summary>手柄输入按钮</summary>
+	/// <remarks>需要在InputManager中妥善配置。</remarks>
+	public enum JButton {
+		/// <summary>切换魔法</summary>
+		J_ToggleMagic,
+		/// <summary>切换道具</summary>
+		J_ToggleItem,
+		/// <summary>切换左手武器</summary>
+		J_ToggleLHand,
+		/// <summary>切换右手武器</summary>
+		J_ToggleRHand,
 
-		JS_Button0,
-		JS_Button1,
-		JS_Button2,
-		JS_Button3,
+		/// <summary>奔跑（默认：JS_Button0）</summary>
+		J_Run,
+		/// <summary>闪避（默认：JS_Button0）</summary>
+		J_Dodge,
+		/// <summary>跳跃（默认：JS_Button0）</summary>
+		J_Jump,
+		/// <summary>使用物品（默认：JS_Button1）</summary>
+		J_UseItem,
+		/// <summary>互动（默认：JS_Button2）</summary>
+		J_Interact,
+		/// <summary>切换武器持有方式（默认：JS_Button3）</summary>
+		J_ToggleHold,
 
-		/// <summary>左手主要动作</summary>
-		JS_LB,
-		/// <summary>左手次要动作</summary>
-		JS_RB,
-		/// <summary>右手主要动作</summary>
-		JS_LT,
-		/// <summary>右手次要动作</summary>
-		JS_RT,
+		/// <summary>左手主要动作（默认：JS_LB）</summary>
+		J_LHandAct1,
+		/// <summary>左手次要动作（默认：JS_LT）</summary>
+		J_LHandAct2,
+		/// <summary>右手主要动作（默认：JS_RB）</summary>
+		J_RHandAct1,
+		/// <summary>右手次要动作（默认：JS_RT）</summary>
+		J_RHandAct2,
 
-		/// <summary>静步</summary>
-		JS_L3,
-		/// <summary>目标锁定/视角重置</summary>
-		JS_R3,
-
-		/// <summary>打开菜单</summary>
-		JS_Start,
-		/// <summary>打开次要菜单</summary>
-		JS_Select
+		/// <summary>静步（默认：JS_L3）</summary>
+		J_Walk,
+		/// <summary>锁定/重置视角（默认：JS_R3）</summary>
+		J_Lock,
+		/// <summary>打开菜单（默认：JS_Start）</summary>
+		J_Menu,
+		/// <summary>打开次要菜单（默认：JS_Select）</summary>
+		J_SecMenu
 	}
 
 	#endregion
 
 	
+	#region ［游戏全局的枚举］
+
+	/// <summary>游戏对象的标签</summary>
+	public enum Tag {
+		Player,
+		Enemy
+	}
+
+	/// <summary>游戏对象的层级</summary>
 	public enum Layer {
 		Default = 0,
 		TransparentFX = 1,
 		Ignore__Raycast = 2,
 		Water = 4,
 		UI = 5,
-		
+
 		PostProcessing = 8,
 		Ground = 9,
 		Weapon = 10,
 		Enemy = 11
 	}
-	
 
-	#region ［玩家的动画状态机］
+	#endregion
 
-	/// <summary>玩家的FSM层级</summary>
-	public enum PlayerFSMLayer {
-		BaseLayer,
-		AttackLayer,
-		DefenseLayer
+
+	#region ［玩家的枚举］
+
+	/// <summary>玩家的枚举类</summary>
+	public static class EPlayer {
+		/// <summary>玩家的FSM层级</summary>
+		public enum FSMLayer {
+			BaseLayer,
+			AttackLayer,
+			DefenseLayer
+		}
+
+
+		/// <summary>玩家的FSM状态</summary>
+		public enum FSMState {
+//			Idle,
+//			Walk,
+//			Run,
+
+			OnGround,
+			Dodge,
+			Roll,
+			Jump,
+			Fall,
+
+			Idle,
+			__1Hand_Slash1,
+			__1Hand_Slash2,
+			__1Hand_Slash3,
+
+			__1Hand_ShieldUp
+		}
+
+
+		/// <summary>玩家的FSM参数</summary>
+		public enum FSMParam {
+			forward,
+			right,
+			dodge,
+			jump,
+			isOnGround,
+			fallRoll,
+			attack,
+			defense
+		}
+
+
+		/// <summary>玩家的FSM曲线参数</summary>
+		/// <remarks>一般用于设置某一状态中的位移。</remarks>
+		public enum FSMCurve {
+			spd_Jab_Y,
+			spd_Jab_Z,
+			spd_Roll_Y,
+			spd_Jump_Y,
+
+			spd_Atk_1H_Slash1_Z
+		}
+
+
+		/// <summary>玩家的FSM属性控制参数</summary>
+		/// <remarks>一般用于控制动画的属性</remarks>
+		public enum FSMProp { }
 	}
-
-
-	/// <summary>玩家的FSM状态</summary>
-	public enum PlayerFSMState {
-//		Idle,
-//		Walk,
-//		Run,
-		
-		OnGround,
-		Dodge,
-		Roll,
-		Jump,
-		Fall,
-
-		Idle,
-		__1Hand_Slash1,
-		__1Hand_Slash2,
-		__1Hand_Slash3,
-		
-		__1Hand_ShieldUp
-	}
-
-
-	/// <summary>玩家的FSM参数</summary>
-	public enum PlayerFSMParam {
-		forward,
-		right,
-		dodge,
-		jump,
-		isOnGround,
-		fallRoll,
-		attack,
-		defense
-	}
-
-
-	/// <summary>玩家的FSM曲线参数</summary>
-	/// <remarks>一般用于设置某一状态中的位移。</remarks>
-	public enum PlayerFSMCurve {
-		spd_Jab_Y,
-		spd_Jab_Z,
-		spd_Roll_Y,
-		spd_Jump_Y,
-
-		spd_Atk_1H_Slash1_Z
-	}
-
-
-	/// <summary>玩家的FSM属性控制参数</summary>
-	/// <remarks>一般用于控制动画的属性</remarks>
-	public enum PlayerFSMProp { }
 
 	#endregion
 }

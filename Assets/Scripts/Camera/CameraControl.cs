@@ -4,6 +4,7 @@
 
 //TODO：角色的移动应该相对于摄像头的正方向
 //TODO：锁定时跳跃，会沿着圆周方向跳出去，而非切线方向
+//TODO：实现要锁定但没有可锁定的目标时，重置视角的功能
 
 /*******
  * ［概述］
@@ -29,6 +30,7 @@
 using System;
 using DSWork;
 using DSWork.Utility;
+using DSWork.Global;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,6 +45,7 @@ namespace UU_Lesson {
 		/// <summary>主摄像机只在平面上的正方向</summary>
 		public Vector3 CameraYForward => cameraRotation_Y.transform.forward;
 
+		
 		/// <summary>水平视角旋转速度</summary>
 		public float horizontalSpeed = 100.0f;
 		/// <summary>垂直视角旋转速度</summary>
@@ -51,7 +54,6 @@ namespace UU_Lesson {
 		public Image _LockIcon;
 
 		private LockTarget lockTarget;
-
 		private GameObject model;
 		private PlayerInput pi;
 
@@ -97,7 +99,7 @@ namespace UU_Lesson {
 			var modelOrigin2 = modelOrigin1 + new Vector3(0, 1, 0);
 			var boxCenter = modelOrigin2 + model.transform.forward * 5.0f;
 			//从某一点，构建某个物体，指定某个层级，返回该层级中在这个物体中的碰撞体数组
-			var cols = Physics.OverlapBox(boxCenter, new Vector3(0.5f, 0.5f, 5f), model.transform.rotation, LayerMask.GetMask(DSWork.Global.Layer.Enemy.TS()));
+			var cols = Physics.OverlapBox(boxCenter, new Vector3(0.5f, 0.5f, 5f), model.transform.rotation, LayerMask.GetMask(Layer.Enemy.TS()));
 
 			//TODO：如何较完美地切换锁定的敌人？
 			if(cols.Length == 0) {
@@ -173,7 +175,7 @@ namespace UU_Lesson {
 		}
 
 
-		/// <summary>锁定目录对象</summary>
+		/// <summary>锁定目标对象</summary>
 		private class LockTarget {
 			public readonly GameObject go;
 			public readonly float halfHeight;

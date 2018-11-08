@@ -32,7 +32,7 @@ namespace DSWork {
 
 		
 		void OnAnimatorIK(int layerIndex) {
-			if(animator.GetBool(PlayerFSMParam.defense.TS()))
+			if(animator.GetBool(EPlayer.FSMParam.defense.TS()))
 				return;
 			
 			Transform leftLowerArm = animator.GetBoneTransform(HumanBodyBones.LeftLowerArm);

@@ -27,7 +27,7 @@ namespace DSWork {
 //		/// 重置Trigger类型的FSM参数
 //		/// </summary>
 //		/// <param name="triggers"></param>
-//		public void ResetTrigger(params PlayerFSMParam[] triggers) {
+//		public void ResetTrigger(params EPlayer.FSMParam[] triggers) {
 //			foreach(var trigger in triggers) {
 //				//如果这个参数不是Trigger类型的怎么办？
 //				animator.ResetTrigger(trigger.ToString());
