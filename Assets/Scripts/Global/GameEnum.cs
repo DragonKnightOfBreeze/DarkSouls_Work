@@ -5,8 +5,6 @@ namespace DSWork.Global {
 	
 	#region ［输入］
 
-	/// <summary>键鼠输入坐标</summary>
-	/// <remarks>需要在InputManager中妥善配置。</remarks>
 	public enum KAxis {
 		/// <summary>向前移动</summary>
 		Forward,
@@ -26,10 +24,9 @@ namespace DSWork.Global {
 		VRight
 	}
 	
-	
 	/// <summary>键鼠输入按钮</summary>
 	/// <remarks>需要在InputManager中妥善配置。</remarks>
-	public enum KButton {
+	public enum KButton {		
 		/// <summary>切换魔法</summary>
 		ToggleMagic,
 		/// <summary>切换道具</summary>

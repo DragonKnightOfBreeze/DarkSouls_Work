@@ -592,7 +592,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &674408540
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -680,7 +680,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   horizontalSpeed: 100
   verticalSpeed: 60
-  _LockIcon: {fileID: 0}
+  _LockIcon: {fileID: 1867599201}
 --- !u!1 &932491739
 GameObject:
   m_ObjectHideFlags: 0
@@ -919,7 +919,8 @@ MonoBehaviour:
   DMag: 0
   DVec: {x: 0, y: 0, z: 0}
   EnableInput: 1
-  UseKM: 1
+  UseKeyboard: 1
+  UseJoystick: 0
 --- !u!114 &1519599927
 MonoBehaviour:
   m_ObjectHideFlags: 0

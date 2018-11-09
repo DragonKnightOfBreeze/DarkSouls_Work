@@ -30,12 +30,13 @@
  * 作者：微风的龙骑士 风游迩
  */
 
+using System;
 using System.Collections;
 using DSWork.Global;
 using DSWork.Utility;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
-using UU_Lesson;
 
 namespace DSWork {
 	/// <summary>动作控制器</summary>
@@ -86,7 +87,7 @@ namespace DSWork {
 		private Vector3 deltaPos;
 
 		/// <summary>插值目标，用于转换FSM层级</summary>
-		private float lerpTarget;
+		private float layerWeightTarget; 
 
 		#endregion
 
@@ -132,28 +133,26 @@ namespace DSWork {
 
 
 		/// <summary>角色的移动控制，整体的速度控制</summary>
-		private void PlayerMove() {
-			planerMoveSpeed = Vector3.zero;
-			thrustVec = Vector3.zero;
-			deltaPos = Vector3.zero;
-			
+		private void PlayerMove() {			
 			//如果没有处于锁定状态
 			if(!cameraControl.LockState) {
 				//设置FSM混合参数（在待机、移动、奔跑状态之间切换）
 				//利用插值函数实现平滑过渡效果，每一次过渡一半。
 				float tempMultiply = pi.DMag * Mathf.Lerp(animator.GetFloat(EPlayer.FSMParam.forward.TS()),pi.Sgn_Run.To2_1(), 0.5f);
 				animator.SetFloat(EPlayer.FSMParam.forward.TS(), tempMultiply);
-				animator.SetFloat(EPlayer.FSMParam.forward.TS(), 0);
+				animator.SetFloat(EPlayer.FSMParam.right.TS(), 0);
+				
+
+				//设置玩家速度（二维）（考虑是否奔跑）（考虑是否锁定了平面移动）
+				if(!lockMove) {
+					planerMoveSpeed = pi.DMag * model.transform.forward * walkSpeed * (pi.Sgn_Run ? runMultiplier : 1.0f);
+					planerMoveSpeed = new Vector3(planerMoveSpeed.x, 0, planerMoveSpeed.z);
+				}
 				
 				//设置方向（旋转）
 				if(pi.DMag > 0.1f) {
 					//球面线性插值，用于变换向量
 					model.transform.forward = Vector3.Slerp(model.transform.forward, pi.DVec, 0.3f);
-				}
-				//设置玩家速度（二维）（考虑是否奔跑）（考虑是否锁定了平面移动）
-				if(!lockMove) {
-					planerMoveSpeed = pi.DMag * model.transform.forward * walkSpeed * (pi.Sgn_Run ? runMultiplier : 1.0f);
-					planerMoveSpeed = new Vector3(planerMoveSpeed.x, 0, planerMoveSpeed.z);
 				}
 			}
 			
@@ -163,6 +162,12 @@ namespace DSWork {
 				animator.SetFloat(EPlayer.FSMParam.forward.TS(),localDVec.z * pi.Sgn_Run.To2_1());
 				animator.SetFloat(EPlayer.FSMParam.right.TS(),localDVec.x * pi.Sgn_Run.To2_1());
 				
+
+				//设置玩家速度（二维）
+				if(!lockMove) {
+					planerMoveSpeed = pi.DVec * walkSpeed * (pi.Sgn_Run ? runMultiplier : 1.0f);
+				}
+				
 				//设置方向（旋转）
 				//如果不需要跟踪方向（使在闪避时，以人物的移动方向为基准）
 				if(!trackDir) {
@@ -171,11 +176,6 @@ namespace DSWork {
 				else {
 					model.transform.forward = planerMoveSpeed.normalized;
 				}
-				
-				//设置玩家速度（二维）
-				if(!lockMove) {
-					planerMoveSpeed = pi.DVec * walkSpeed * (pi.Sgn_Run ? runMultiplier : 1.0f);
-				}
 			}
 		
 			//Root Motion相关
@@ -183,6 +183,10 @@ namespace DSWork {
 			
 			//玩家移动（考虑跳跃、翻滚）
 			cc.Move((planerMoveSpeed + thrustVec) * Time.deltaTime);
+			
+			planerMoveSpeed = Vector3.zero;
+			thrustVec = Vector3.zero;
+			deltaPos = Vector3.zero;
 		}
 
 		/// <summary>角色的动作控制</summary>
@@ -204,7 +208,7 @@ namespace DSWork {
 			//防御
 			else if(pi.Sgn_LHandAct1 && !lockAction)
 				animator.SetBool(EPlayer.FSMParam.defense.TS(), true);
-			else if(pi.Sgn_LHandAct1 && !lockAction)
+			else if(!pi.Sgn_LHandAct1 && !lockAction)
 				animator.SetBool(EPlayer.FSMParam.defense.TS(), false);
 		}
 
@@ -283,23 +287,31 @@ namespace DSWork {
 
 
 			//攻击层级的待机状态的相关事件
-			animator.GetBehaviour<FSMEvents_RHand_Idle>().OnEnterEvent += () => StateInitChangeLayer(0.0f);
-			animator.GetBehaviour<FSMEvents_RHand_Idle>().OnUpdateEvent += () => StateChangeLayer(EPlayer.FSMLayer.AttackLayer);
+			animator.GetBehaviour<FSMEvents_RHand_Idle>().OnEnterEvent += () => StartCoroutine(StateExitLayer(EPlayer.FSMLayer.AttackLayer));
+			animator.GetBehaviour<FSMEvents_RHand_Idle>().OnExitEvent += () => StartCoroutine(StateEnterLayer(EPlayer.FSMLayer.AttackLayer));
+//			animator.GetBehaviour<FSMEvents_RHand_Slash>().OnExitEvent += () =>InitChangeLayer(EPlayer.FSMLayer.AttackLayer, 0f);
+//			animator.GetBehaviour<FSMEvents_RHand_Idle>().OnExitEvent += () =>InitChangeLayer(EPlayer.FSMLayer.AttackLayer, 1f);
+//			animator.GetBehaviour<FSMEvents_RHand_Idle>().OnUpdateEvent += () => ChangeLayer(EPlayer.FSMLayer.AttackLayer);
+			
 
 			//单手攻击状态的相关事件
-			animator.GetBehaviour<FSMEvents_RHand_Slash>().OnEnterEvent += () => StateInitChangeLayer(1.0f);
+//			animator.GetBehaviour<FSMEvents_RHand_Slash>().OnEnterEvent += () => StartCoroutine(StateEnterLayer(EPlayer.FSMLayer.AttackLayer));
 			animator.GetBehaviour<FSMEvents_RHand_Slash>().OnUpdateEvent += () => {
 				StateSetSpeed(0f, EPlayer.FSMCurve.spd_Atk_1H_Slash1_Z);
-				StateChangeLayer(EPlayer.FSMLayer.AttackLayer);
 			};
 
-			//防御层级的待机状态的相关事件
-			animator.GetBehaviour<FSMEvents_LHand_Idle>().OnEnterEvent += () => StateInitChangeLayer(0.0f);
-			animator.GetBehaviour<FSMEvents_LHand_Idle>().OnUpdateEvent += () => StateChangeLayer(EPlayer.FSMLayer.DefenseLayer);
+			
+//			animator.GetBehaviour<FSMEvents_LHand_ShieldUp>().OnExitEvent += () => InitChangeLayer(EPlayer.FSMLayer.DefenseLayer, 0f);
+//			animator.GetBehaviour<FSMEvents_LHand_Idle>().OnExitEvent += () => InitChangeLayer(EPlayer.FSMLayer.DefenseLayer, 1f);
+//			animator.GetBehaviour<FSMEvents_LHand_Idle>().OnUpdateEvent += () => ChangeLayer(EPlayer.FSMLayer.DefenseLayer);
+			
+			
+			//攻击层级的待机状态的相关事件
+			animator.GetBehaviour<FSMEvents_LHand_Idle>().OnEnterEvent += () => StartCoroutine(StateExitLayer(EPlayer.FSMLayer.DefenseLayer));
+			animator.GetBehaviour<FSMEvents_LHand_Idle>().OnExitEvent += () => StartCoroutine(StateEnterLayer(EPlayer.FSMLayer.DefenseLayer));
 
 			//单手防御状态的相关事件
-			animator.GetBehaviour<FSMEvents_LHand_ShieldUp>().OnEnterEvent += () => StateInitChangeLayer(1.0f);
-			animator.GetBehaviour<FSMEvents_LHand_ShieldUp>().OnUpdateEvent += () => StateChangeLayer(EPlayer.FSMLayer.DefenseLayer);
+//			animator.GetBehaviour<FSMEvents_LHand_ShieldUp>().OnEnterEvent += () => StartCoroutine(StateEnterLayer(EPlayer.FSMLayer.DefenseLayer));
 		}
 
 		/// <summary>使输入失效，锁定攻击，且锁定平面移动</summary>
@@ -344,22 +356,54 @@ namespace DSWork {
 			thrustVec = model.transform.up * animator.GetFloat(speed_y.TS()) + model.transform.forward * animator.GetFloat(speed_z.TS());
 		}
 
-		/// <summary>准备切换FSM层级（使用Lerp平滑切换）</summary>
-		private void StateInitChangeLayer(float target) {
-			//设置初始lerp目标
-			lerpTarget = target;
+		
+		
+		
+		IEnumerator StateEnterLayer(EPlayer.FSMLayer layer,float lerpSpeed = 0.5f,float target = 1.0f) {
+			animator.SetLayerWeight(0, 0);
+			float curWeight = animator.GetLayerWeight(animator.GetLayerIndex(layer.TS()));
+			layerWeightTarget = Mathf.Clamp01(target);
+			while(curWeight < layerWeightTarget) {
+				curWeight = Mathf.Lerp(curWeight, layerWeightTarget, lerpSpeed);
+				animator.SetLayerWeight(animator.GetLayerIndex(layer.TS()), curWeight);
+				yield return new WaitForSeconds(0.02f);
+			}
+		}
+		
+		IEnumerator StateExitLayer(EPlayer.FSMLayer layer,float lerpSpeed = 0.5f,float target= 0f) {
+			animator.SetLayerWeight(0, 1);
+			float curWeight = animator.GetLayerWeight(animator.GetLayerIndex(layer.TS()));
+			layerWeightTarget = Mathf.Clamp01(target);
+			while(curWeight > layerWeightTarget) {
+				curWeight = Mathf.Lerp(curWeight, layerWeightTarget, lerpSpeed);
+				animator.SetLayerWeight(animator.GetLayerIndex(layer.TS()), curWeight);
+				yield return new WaitForSeconds(0.02f);
+			}
 		}
 
-		/// <summary>切换FSM层级（使用Lerp平滑切换）</summary>
-		/// <remarks>思路：将指定层级的权重平滑增加到1.0/0</remarks>
-		/// <param name="layer">改变权重的层级</param>
-		/// <param name="lerpTime">插值时间</param>
-		private void StateChangeLayer(EPlayer.FSMLayer layer, float lerpTime = 0.4f) {
-			//使用插值，平缓切换FSM层级
-			float curWeight = animator.GetLayerWeight(animator.GetLayerIndex(layer.TS()));
-			curWeight = Mathf.Lerp(curWeight, lerpTarget, lerpTime);
-			animator.SetLayerWeight(animator.GetLayerIndex(layer.TS()), curWeight);
-		}
+//		public void InitChangeLayer(EPlayer.FSMLayer layer,float target) {
+//			layerWeightTarget = Mathf.Clamp01(target);
+//		}
+//	
+//
+//		public void ChangeLayer(EPlayer.FSMLayer layer,float lerpSpeed = 1f) {
+//			var weight = animator.GetLayerWeight(animator.GetLayerIndex(layer.TS()));
+//			weight = Mathf.Lerp(weight, layerWeightTarget, lerpSpeed);
+//			animator.SetLayerWeight(animator.GetLayerIndex(layer.TS()), weight);
+//		}
+		
+
+//		/// <summary>切换FSM层级（使用Lerp平滑切换）</summary>
+//		/// <remarks>思路：将指定层级的权重平滑增加到1.0/0</remarks>
+//		/// <param name="layer">改变权重的层级</param>
+//		/// <param name="lerpSpeed">插值时间</param>
+//		private void StateChangeLayer(EPlayer.FSMLayer layer, float lerpSpeed = 0.4f) {
+//			//使用插值，平缓切换FSM层级
+//			float curWeight = animator.GetLayerWeight(animator.GetLayerIndex(layer.TS()));
+//			curWeight = Mathf.Lerp(curWeight, lerpTarget, lerpSpeed);
+//			animator.SetLayerWeight(animator.GetLayerIndex(layer.TS()), curWeight);
+//		}
+
 
 		#endregion
 

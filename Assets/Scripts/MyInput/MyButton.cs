@@ -95,20 +95,21 @@ namespace DSWork {
 			extendTimer.Tick();
 			delayTimer.Tick();
 
+			lastState = curState;
 			curState = Input.GetButton(button);
 			isPressing = curState;
+			onPressed = false;
+			onReleased = false;
 			if(curState != lastState) {
 				if(curState) {
-					onPressed = curState;
+					onPressed = true;
 					delayTimer.StartTimer(delayingDuration);
 				}
 				else {
-					onReleased = !curState;
+					onReleased = true;
 					extendTimer.StartTimer(extendingDuration);
 				}
 			}
-			lastState = curState;
-
 			isExtending = extendTimer.curState == MyTimer.State.Run;
 			isDelaying = delayTimer.curState == MyTimer.State.Run;
 		}

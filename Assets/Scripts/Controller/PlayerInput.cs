@@ -28,18 +28,19 @@ using System.Collections.Generic;
 using DSWork.Global;
 using DSWork.Utility;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace DSWork {
 	/// <summary>玩家输入模块</summary>
 	public class PlayerInput : MonoBehaviour {
 		[HideInInspector]
-		public Dictionary<KButton, IMyButton> KButtonDict;
-		[HideInInspector]
 		public Dictionary<KAxis, IMyAxis> KAxisDict;
 		[HideInInspector]
-		public Dictionary<JButton, IMyButton> JButtonDict;
+		public Dictionary<KButton, IMyButton> KButtonDict;
 		[HideInInspector]
 		public Dictionary<JAxis, IMyAxis> JAxisDict;
+		[HideInInspector]
+		public Dictionary<JButton, IMyButton> JButtonDict;
 
 		# region ［输入信号］
 
@@ -105,26 +106,26 @@ namespace DSWork {
 		public float DRight;
 		/// <summary>移动方向向量的模长，原点到二维信号的距离</summary>
 		public float DMag;
-		/// <summary>移动方向向量</summary>
+		/// <summary>移动方向向量（世界坐标系）</summary>
 		public Vector3 DVec;
 
 		/// <summary>是否启用模块</summary>
 		[Header("【其他】")]
 		public bool EnableInput = true;
 		/// <summary>是否使用键鼠</summary>
-		public bool UseKM = true;
+		public bool UseKeyboard = true;
+		/// <summary>是否使用手柄</summary>
+		public bool UseJoystick;
 
 		private GameObject model;
-		
+
 		private float velocityDForward;
 		private float velocityDRight;
 		private readonly float smoothTime = 0.1f;
 
-		
-
 		#endregion
 
-		
+
 		private void Awake() {
 			InitInputDict();
 			model = GameObject.FindWithTag(Tag.Player.TS());
@@ -136,51 +137,51 @@ namespace DSWork {
 
 
 		#region ［得到用户输入］
-		
-		/// <summary>
-		/// 初始化输入字典
-		/// </summary>
+
+		/// <summary>初始化输入字典</summary>
 		private void InitInputDict() {
-			KAxisDict = new Dictionary<KAxis, IMyAxis> {
-				[KAxis.Forward] = new MyAxis(KAxis.Forward.TS(),KAxis.Back.TS()),
-				[KAxis.Right] = new MyAxis(KAxis.Right.TS(),KAxis.Left.TS()),
-				[KAxis.VUp] = new MyAxis(KAxis.VUp.TS(),KAxis.VDown.TS()),
-				[KAxis.VRight] = new MyAxis(KAxis.VRight.TS(),KAxis.VLeft.TS())
+			KAxisDict = new Dictionary<KAxis, IMyAxis>{
+				[KAxis.Forward] = new MyAxis(KAxis.Forward.TS(), KAxis.Back.TS()),
+				[KAxis.Right] = new MyAxis(KAxis.Right.TS(), KAxis.Left.TS()),
+				[KAxis.VUp] = new MyAxis(KAxis.VUp.TS()),
+				[KAxis.VRight] = new MyAxis(KAxis.VRight.TS())
 			};
 			
 			KButtonDict = new Dictionary<KButton, IMyButton>();
 			foreach(KButton ev in Enum.GetValues(typeof(KButton)))
-				KButtonDict.Add(ev,new MyButton(ev.TS()));
-			
+				KButtonDict.Add(ev, new MyButton(ev.TS()));
+
 			JAxisDict = new Dictionary<JAxis, IMyAxis>();
 			foreach(JAxis ev in Enum.GetValues(typeof(JAxis)))
-				JAxisDict.Add(ev,new MyAxis(ev.TS()));
-			
+				JAxisDict.Add(ev, new MyAxis(ev.TS()));
 			JButtonDict = new Dictionary<JButton, IMyButton>();
 			foreach(JButton ev in Enum.GetValues(typeof(JButton)))
-				JButtonDict.Add(ev,new MyButton(ev.TS()));
+				JButtonDict.Add(ev, new MyButton(ev.TS()));
 		}
-		
-		/// <summary>
-		/// 协程：得到用户输入
-		/// </summary>
+
+		/// <summary>协程：得到用户输入</summary>
 		/// <returns></returns>
 		private IEnumerator GetInputCr() {
 			while(true) {
 				yield return new WaitForSeconds(0.02f);
+				
+				print("防御："+KButtonDict[KButton.LHandAct1].Press);
+				print("攻击："+KButtonDict[KButton.RHandAct1].PressDown);
+				
+				
 				if(!EnableInput)
 					continue;
-				
+
 				//遍历计时，然后得到用户输入
-				if(UseKM) {
+				if(UseKeyboard) {
 					foreach(var axis in KAxisDict)
 						axis.Value.Tick();
 					foreach(var button in KButtonDict)
 						button.Value.Tick();
 					GetInput_KM();
 				}
-				else {
-					foreach(var axis in KAxisDict)
+				if(UseJoystick){
+					foreach(var axis in JAxisDict)
 						axis.Value.Tick();
 					foreach(var button in JButtonDict)
 						button.Value.Tick();
@@ -195,12 +196,12 @@ namespace DSWork {
 		/// <summary>得到用户输入（键鼠）</summary>
 		private void GetInput_KM() {
 			//处理输入信号
-			Sgn_Forward = KAxisDict[KAxis.Forward].AxisValue;
-			Sgn_Right = KAxisDict[KAxis.Right].AxisValue;
-			Sgn_VUp = KAxisDict[KAxis.VUp].AxisValue;
+			Sgn_Forward = KAxisDict[KAxis.Forward].AxisValue; 
+			Sgn_Right =  KAxisDict[KAxis.Right].AxisValue;
+			Sgn_VUp =  KAxisDict[KAxis.VUp].AxisValue; 
 			Sgn_VRight = KAxisDict[KAxis.VRight].AxisValue;
-
-			Sgn_Run = ((MyButton)KButtonDict[KButton.Run]).FullDelayPress();
+			
+			Sgn_Run = KButtonDict[KButton.Run].FullDelayPress();
 			Sgn_Jump = KButtonDict[KButton.Dodge].DoublePress();
 			Sgn_Dodge = KButtonDict[KButton.Jump].QuickPress();
 			Sgn_Interact = KButtonDict[KButton.Interact].PressDown;
@@ -221,17 +222,12 @@ namespace DSWork {
 
 		/// <summary>得到用户输入（手柄）</summary>
 		private void GetInput_JS() {
-			if(!EnableInput)
-				return;
-
-			//计算二维信号的目标位置
-			Sgn_Forward =  JAxisDict[JAxis.J_Forward_Back].AxisValue;
+			//处理输入信号
+			Sgn_Forward = JAxisDict[JAxis.J_Forward_Back].AxisValue;
 			Sgn_Right = JAxisDict[JAxis.J_Right_Left].AxisValue;
-			//计算视角移动的信号
 			Sgn_VUp = JAxisDict[JAxis.J_VUp_Down].AxisValue * GlobalSetting.CameraRotationSpeed;
 			Sgn_VRight = JAxisDict[JAxis.J_VRight_Left].AxisValue * GlobalSetting.CameraRotationSpeed;
-
-			//计算其他信号
+			
 			Sgn_Run = Input.GetButton(JButton.J_Run.TS());
 			Sgn_Dodge = Input.GetButtonUp(JButton.J_Run.TS());
 			Sgn_Interact = Input.GetButtonDown(JButton.J_Dodge.TS());
@@ -262,10 +258,11 @@ namespace DSWork {
 			DForward = tempDAxis.y;
 			DRight = tempDAxis.x;
 
-			DMag = Mathf.Sqrt(DForward * DForward + DRight * DRight);
+			
 			//TODO：如果要和黑魂中的设计一致，仅需这里，参考的正方向应该是相机的正方向
 			//cameraControl.CameraYForward
 			DVec = DRight * model.transform.right + DForward * model.transform.forward;
+			DMag = Mathf.Sqrt(DForward * DForward + DRight * DRight);
 		}
 
 

@@ -34,14 +34,14 @@ using DSWork.Global;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UU_Lesson {
+namespace DSWork {
 	/// <summary>相机控制器</summary>
 	public class CameraControl : MonoBehaviour {
 
 		/// <summary>最大锁定距离</summary>
 		public float MaxLockDistance { set; get; } = 10f;
 		/// <summary>是否处于锁定状态</summary>
-		public bool LockState => lockTarget == null;
+		public bool LockState => lockTarget != null;
 		/// <summary>主摄像机只在平面上的正方向</summary>
 		public Vector3 CameraYForward => cameraRotation_Y.transform.forward;
 
