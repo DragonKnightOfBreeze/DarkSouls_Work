@@ -3,13 +3,10 @@ using DSWork.Utility;
 using UnityEngine;
 
 namespace DSWork.InputEX {
-	/// <summary>
-	/// 封装的按钮类
-	/// </summary>
+	/// <summary>封装的按钮类</summary>
 	public class ButtonEX : IInputEX {
 		private readonly EInput buttonName;
 
-		private bool curState;
 		private bool lastState;
 		private bool isToggling;
 
@@ -21,11 +18,11 @@ namespace DSWork.InputEX {
 		private float _axisValue;
 
 		/// <summary>持续按压信号</summary>
-		public bool Press => curState;
+		public bool Press { get; private set; }
 		/// <summary>按下信号</summary>
-		public bool PressDown => curState && isToggling;
+		public bool PressDown => Press && isToggling;
 		/// <summary>抬起信号</summary>
-		public bool PressUp => !curState && isToggling;
+		public bool PressUp => !Press && isToggling;
 
 		/// <summary>修正过的持续按压信号（延迟按下，延长抬起）</summary>
 		/// <param name="delay">延迟时间</param>
@@ -34,7 +31,7 @@ namespace DSWork.InputEX {
 		public bool FixedPress(float delay, float extend) {
 			timeA = delay;
 			timeB = extend;
-			return curState && timerA.State != SimpleTimer.EState.Running || timerB.State == SimpleTimer.EState.Running;
+			return Press && timerA.State != SimpleTimer.EState.Running || timerB.State == SimpleTimer.EState.Running;
 		}
 
 		/// <summary>修正过的按下信号（延迟/延长，默认延迟）</summary>
@@ -59,9 +56,9 @@ namespace DSWork.InputEX {
 			return timerB.State == SimpleTimer.EState.Running;
 		}
 
-		
+
 		/// <summary>坐标值</summary>
-		public float AxisValue => curState.To1_0();
+		public float AxisValue => Press.To1_0();
 
 
 		/// <summary>快速点击的信号</summary>
@@ -92,17 +89,17 @@ namespace DSWork.InputEX {
 		public void Tick() {
 			timerA.Tick();
 			timerB.Tick();
-			lastState = curState;
+			lastState = Press;
 			try {
-				curState = Input.GetButton(buttonName.TS());
+				Press = Input.GetButton(buttonName.TS());
 			} catch (Exception e) {
 				Debug.Log(e.Message);
-				curState = false;
+				Press = false;
 			}
 			isToggling = false;
-			if(curState != lastState) {
+			if(Press != lastState) {
 				isToggling = true;
-				if(curState)
+				if(Press)
 					timerA.StartTimer(timeA);
 				else
 					timerB.StartTimer(timeB);

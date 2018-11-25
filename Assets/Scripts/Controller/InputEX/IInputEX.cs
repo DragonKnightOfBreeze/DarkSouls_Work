@@ -7,11 +7,8 @@
  */
 
 namespace DSWork.InputEX {
-	/// <summary>
-	/// 封装的输入接口
-	/// </summary>
+	/// <summary>封装的输入接口</summary>
 	public interface IInputEX {
-		
 		/// <summary>持续按压信号</summary>
 		bool Press { get; }
 		/// <summary>按下信号</summary>
@@ -36,8 +33,8 @@ namespace DSWork.InputEX {
 		/// <param name="isDelaying">是否延迟</param>
 		/// <returns></returns>
 		bool FixedPressUp(float time, bool isDelaying = true);
-		
-		
+
+
 		/// <summary>快速点击的信号</summary>
 		/// <param name="interval">用于判断的间隔时间</param>
 		/// <returns></returns>

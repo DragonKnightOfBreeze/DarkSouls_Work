@@ -11,13 +11,16 @@ namespace DSWork {
 			return b ? 2.0f : 1.0f;
 		}
 
-		/// <summary>
-		/// 将布尔值转换为n或1。
-		/// </summary>
+		/// <summary>将布尔值转换为n或1。</summary>
 		/// <param name="b"></param>
 		/// <returns></returns>
-		public static float ToN_1(this bool b,float n) {
+		public static float ToN_1(this bool b, float n) {
 			return b ? n : 1.0f;
+		}
+
+		/// <summary>将布尔值转换为n或0。</summary>
+		public static float ToN_0(this bool b, float n) {
+			return b ? n : 0f;
 		}
 	}
 }

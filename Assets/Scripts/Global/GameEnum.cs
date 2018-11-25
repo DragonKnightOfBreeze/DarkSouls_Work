@@ -2,8 +2,6 @@
 //TODO：重构：JInput重命名
 
 namespace DSWork.Global {
-	
-	
 	#region ［游戏全局的枚举］
 
 	/// <summary>游戏对象的标签</summary>
@@ -33,7 +31,6 @@ namespace DSWork.Global {
 
 	#region ［玩家的枚举］
 
-		
 	/// <summary>玩家的FSM层级</summary>
 	public enum EPlayer_FSMLayer {
 		BaseLayer,
@@ -54,14 +51,12 @@ namespace DSWork.Global {
 		RHand_Slash1,
 		RHand_Slash2,
 		RHand_Slash3,
-		
+
 		LHand_Idle,
 		LHand_ShieldUp
 	}
 
-	/// <summary>
-	/// 玩家的FSM状态的标签
-	/// </summary>
+	/// <summary>玩家的FSM状态的标签</summary>
 	public enum EPlayer_FSMStateTag {
 		Attack
 	}
@@ -94,10 +89,7 @@ namespace DSWork.Global {
 
 
 	/// <summary>玩家的FSM属性控制参数，用于控制动画的属性。</summary>
-	public enum EPlayer_FSMProp {
-		
-	}
-	
+	public enum EPlayer_FSMProp { }
 
 	#endregion
 }

@@ -20,8 +20,7 @@ namespace DSWork {
 		/// <summary>Root Motion更新事件</summary>
 		public event AnimatorMoveDelegate RMUpdateEvent;
 
-		
-		
+
 		private Animator animator;
 
 		private void Awake() {

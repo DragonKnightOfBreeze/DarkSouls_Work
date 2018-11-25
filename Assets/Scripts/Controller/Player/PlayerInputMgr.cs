@@ -33,8 +33,8 @@ using UnityEngine;
 namespace DSWork {
 	/// <summary>玩家的输入管理器</summary>
 	public class PlayerInputMgr : MonoBehaviour {
-		private Dictionary<EInput, IInputEX> KInputDict = new Dictionary<EInput, IInputEX>();
-		private Dictionary<EInput, IInputEX> JInputDict = new Dictionary<EInput, IInputEX>();
+		private readonly Dictionary<EInput, IInputEX> KInputDict = new Dictionary<EInput, IInputEX>();
+		private readonly Dictionary<EInput, IInputEX> JInputDict = new Dictionary<EInput, IInputEX>();
 
 		# region ［输入信号］
 
@@ -105,7 +105,7 @@ namespace DSWork {
 
 		/// <summary>是否启用模块</summary>
 		[Header("【其他】")]
-		public bool LockInput = false;
+		public bool LockInput;
 		/// <summary>是否使用键鼠</summary>
 		public bool UseKeyboard = true;
 		/// <summary>是否使用手柄</summary>
@@ -124,7 +124,7 @@ namespace DSWork {
 
 		private void Awake() {
 			InitInputDict();
-			
+
 			cameraCtrl = gameObject.GetComponent<PlayerCameraCtrl>();
 		}
 
@@ -172,7 +172,7 @@ namespace DSWork {
 					GetInput_JS();
 				}
 				HandleInput();
-				
+
 				print("防御：" + KInputDict[EInput.K_LHandAct1].Press);
 				print("攻击：" + KInputDict[EInput.K_RHandAct1].PressDown);
 			}
@@ -243,7 +243,7 @@ namespace DSWork {
 			}
 			if(toCircle)
 				SquareToCircle(ref Forward, ref Right);
-			
+
 			Distance = Mathf.Sqrt(Forward * Forward + Right * Right);
 			//DONE：参考系的正方向应该是相机的正方向
 			Direction = cameraCtrl.CameraForward * Forward + cameraCtrl.CameraYRight * Right;

@@ -1,3 +1,3 @@
 namespace DSWork {
-	public class FSMEvents_Jump : FSMEvents {}
+	public class FSMEvents_Jump : FSMEvents { }
 }

@@ -16,32 +16,32 @@
 using UnityEngine;
 
 namespace DSWork.Enemy {
-	public class DummyInputMgr: MonoBehaviour {
+	public class DummyInputMgr : MonoBehaviour {
 		public bool Sgn_Lock;
-		
+
 		public bool Sgn_Run;
-		
+
 		public bool Sgn_RHandAct1 = true;
 		public bool Sgn_RHandAct2;
 		public bool Sgn_LHandAct1;
 		public bool Sgn_LHandAct2;
-		
-		public float Forward = 0;
-		public float Right = 0;
-		public float Distance = 0f;
+
+		public float Forward;
+		public float Right;
+		public float Distance;
 		public Vector3 Direction = Vector3.zero;
 
 		public EnemyCameraCtrl cameraCtrl;
 
-		void Awake() {
+		private void Awake() {
 			cameraCtrl = gameObject.GetComponent<EnemyCameraCtrl>();
 		}
-		
-		void Update() {
+
+		private void Update() {
 			HandleInput();
 		}
-		
-		
+
+
 		#region ［其他私有方法］
 
 		/// <summary>处理用户输入</summary>
@@ -50,7 +50,7 @@ namespace DSWork.Enemy {
 		private void HandleInput(bool toCircle = true) {
 			if(toCircle)
 				SquareToCircle(ref Forward, ref Right);
-			
+
 			Distance = Mathf.Sqrt(Forward * Forward + Right * Right);
 			//DONE：参考系的正方向应该是相机的正方向
 			Direction = cameraCtrl.CameraForward * Forward + cameraCtrl.CameraYRight * Right;

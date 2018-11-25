@@ -11,12 +11,11 @@ namespace DSWork.Utility {
 		/// <summary>类的单例。（线程安全）</summary>
 		public static T Instance {
 			get {
-				if(instance == null) {
+				if(instance == null)
 					lock(syncLock) {
 						if(instance == null)
 							instance = new T();
 					}
-				}
 				return instance;
 			}
 		}
@@ -33,7 +32,7 @@ namespace DSWork.Utility {
 		/// <summary>类的单例。（线程安全）</summary>
 		public static T Instance {
 			get {
-				if(instance == null){
+				if(instance == null)
 					lock(syncLock) {
 						if(instance == null) {
 							var ci = typeof(T).GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, emptyTypes, null);
@@ -42,7 +41,6 @@ namespace DSWork.Utility {
 							instance = ci.Invoke(null) as T;
 						}
 					}
-				}
 				return instance;
 			}
 		}

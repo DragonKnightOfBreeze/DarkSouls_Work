@@ -1,3 +1,3 @@
 namespace DSWork {
-	public class FSMEvents_Hurt : FSMEvents {}
+	public class FSMEvents_Hurt : FSMEvents { }
 }

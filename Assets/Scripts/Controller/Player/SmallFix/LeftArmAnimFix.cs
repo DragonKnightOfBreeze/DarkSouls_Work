@@ -20,28 +20,27 @@ namespace DSWork {
 	public class LeftArmAnimFix : MonoBehaviour {
 		//new Vector3(0,-60,15)
 		public Vector3 v;
-		
+
 		private Animator animator;
 		private PlayerActionCtrl actionCtrl;
-		
-		
-		void Awake() {
+
+
+		private void Awake() {
 			animator = gameObject.GetComponent<Animator>();
 			actionCtrl = gameObject.FindParent().GetComponent<PlayerActionCtrl>();
 		}
 
-		
-		void OnAnimatorIK(int layerIndex) {
+
+		private void OnAnimatorIK(int layerIndex) {
 			if(!actionCtrl.useShield_LHand)
 				return;
 			if(animator.GetBool(EPlayer_FSMParam.defense.TS()))
 				return;
-			Transform leftLowerArm = animator.GetBoneTransform(HumanBodyBones.LeftLowerArm);
+			var leftLowerArm = animator.GetBoneTransform(HumanBodyBones.LeftLowerArm);
 			leftLowerArm.localEulerAngles += v;
 			//设置骨骼的本地旋转，欧拉角转为四元数
-			animator.SetBoneLocalRotation(HumanBodyBones.LeftLowerArm,Quaternion.Euler(leftLowerArm.localEulerAngles));
-			
-		}
+			animator.SetBoneLocalRotation(HumanBodyBones.LeftLowerArm, Quaternion.Euler(leftLowerArm.localEulerAngles));
 
+		}
 	}
 }

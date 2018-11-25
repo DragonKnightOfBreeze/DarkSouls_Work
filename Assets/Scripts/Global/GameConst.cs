@@ -1,5 +1,3 @@
 namespace DSWork.Global {
-	public class GameConst {
-		
-	}
+	public class GameConst { }
 }

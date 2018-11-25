@@ -21,6 +21,5 @@ namespace DSWork {
 		public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
 			OnUpdateEvent?.Invoke();
 		}
-	
 	}
 }

@@ -1,3 +1,3 @@
 namespace DSWork {
-	public class FSMEvents_Roll:FSMEvents {}
+	public class FSMEvents_Roll : FSMEvents { }
 }

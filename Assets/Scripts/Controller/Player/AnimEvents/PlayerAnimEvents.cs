@@ -34,14 +34,10 @@ namespace DSWork {
 //			}
 //		}
 
-		/// <summary>
-		/// 重置Trigger信号
-		/// </summary>
+		/// <summary>重置Trigger信号</summary>
 		/// <param name="trigger">Trigger信号名</param>
 		public void ResetTrigger(string trigger) {
 			animator.ResetTrigger(trigger);
 		}
-
-
 	}
 }

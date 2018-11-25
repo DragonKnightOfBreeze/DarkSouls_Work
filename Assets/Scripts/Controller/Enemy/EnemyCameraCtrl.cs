@@ -78,11 +78,10 @@ namespace DSWork.Enemy {
 			//从某一点，构建某个物体，指定某个层级，返回该层级中在这个物体中的碰撞体数组
 			var cols = Physics.OverlapBox(boxCenter, new Vector3(4f, 5f, 10f), model.transform.rotation, LayerMask.GetMask(ELayer.Player.TS()));
 			//TODO：如何较完美地切换锁定的敌人？
-			if(cols.Length == 0) {
+			if(cols.Length == 0)
 				lockTarget = null;
-			}
 			//如果有可以锁定的对象，则得到首先锁定的敌人
-			else {
+			else
 				foreach(var col in cols) {
 					if(lockTarget != null && lockTarget.go == col.gameObject) {
 						lockTarget = null;
@@ -93,7 +92,6 @@ namespace DSWork.Enemy {
 					var pos = lockTarget.go.transform.position;
 					break;
 				}
-			}
 		}
 
 
@@ -139,9 +137,8 @@ namespace DSWork.Enemy {
 
 			//当距离过远时解除锁定
 			float distance = Vector3.Distance(model.transform.position, lockTarget.go.transform.position);
-			if(distance > MaxLockDistance) {
+			if(distance > MaxLockDistance)
 				lockTarget = null;
-			}
 		}
 
 

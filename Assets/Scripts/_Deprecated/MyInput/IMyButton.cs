@@ -30,7 +30,7 @@ namespace DSWork {
 		/// <summary>限时双击信号</summary>
 		/// <param name="interval">间隔时间</param>
 		bool DoublePress(float interval = 0.2f);
-		
+
 		/// <summary>更新输入状态。每帧调用。</summary>
 		void Tick();
 	}

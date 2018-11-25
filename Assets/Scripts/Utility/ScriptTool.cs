@@ -8,7 +8,7 @@ namespace DSWork.Utility {
 		private const string ROOT = "_Scripts";
 		private static GameObject root;
 
-		
+
 		/// <summary>得到挂载到空的游戏对象上的脚本，默认以_Scripts为根节点。</summary>
 		/// <remarks>如果没有，则自动添加。</remarks>
 		/// <param name="path">脚本路径</param>

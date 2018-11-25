@@ -17,9 +17,8 @@ using UnityEngine;
 namespace DSWork {
 	/// <summary>封装的按钮类</summary>
 	public class MyButton : IMyButton {
-
 		private readonly string button;
-		
+
 		private bool curState;
 		private bool lastState;
 
@@ -40,7 +39,7 @@ namespace DSWork {
 		/// <summary>延迟</summary>
 		private bool isDelaying;
 
-		
+
 		/// <summary>按下信号</summary>
 		public bool PressDown => onPressed;
 		/// <summary>释放信号</summary>
@@ -84,12 +83,12 @@ namespace DSWork {
 			return PressDown && ExtendPress(interval);
 		}
 
-		
+
 		public MyButton(string button) {
 			this.button = button;
 		}
-		
-		
+
+
 		/// <summary>更新输入状态。每帧调用。</summary>
 		public void Tick() {
 			extendTimer.Tick();

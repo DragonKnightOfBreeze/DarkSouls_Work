@@ -4,18 +4,16 @@ using UnityEngine;
 
 namespace DSWork.InputEX {
 	public class AxisEX : IInputEX {
-
 		private readonly EInput axisName;
-		
-		private float curAxisValue;
+
 		private float lastAxisValue;
 
 		/// <summary>持续按压信号</summary>
-		public bool Press => curAxisValue >= 0.1f;
+		public bool Press => AxisValue >= 0.1f;
 		/// <summary>按下信号</summary>
-		public bool PressDown => curAxisValue >= 0.1f && lastAxisValue < 0.1f;
+		public bool PressDown => AxisValue >= 0.1f && lastAxisValue < 0.1f;
 		/// <summary>抬起信号</summary>
-		public bool PressUp => curAxisValue <= 0.1f && lastAxisValue > 0.1f;
+		public bool PressUp => AxisValue <= 0.1f && lastAxisValue > 0.1f;
 
 		/// <summary>修正过的持续按压信号（延迟按下，延长抬起）</summary>
 		/// <param name="delay">延迟时间</param>
@@ -41,7 +39,7 @@ namespace DSWork.InputEX {
 			throw new NotImplementedException();
 		}
 
-		
+
 		/// <summary>快速点击的信号</summary>
 		/// <param name="interval">用于判断的间隔时间</param>
 		/// <returns></returns>
@@ -58,7 +56,7 @@ namespace DSWork.InputEX {
 
 
 		/// <summary>坐标值</summary>
-		public float AxisValue => curAxisValue;
+		public float AxisValue { get; private set; }
 
 
 		public AxisEX(string axis) {
@@ -68,15 +66,15 @@ namespace DSWork.InputEX {
 		public AxisEX(EInput axis) {
 			axisName = axis;
 		}
-		
-		
+
+
 		/// <summary>更新输入。</summary>
 		public void Tick() {
-			lastAxisValue = curAxisValue;
+			lastAxisValue = AxisValue;
 			try {
-				curAxisValue = Input.GetAxis(axisName.TS());
+				AxisValue = Input.GetAxis(axisName.TS());
 			} catch (Exception) {
-				curAxisValue = 0;
+				AxisValue = 0;
 			}
 		}
 	}

@@ -18,9 +18,7 @@ using UnityEngine;
 using DSWork.Utility;
 
 namespace DSWork {
-	/// <summary>
-	/// 玩家的角色管理器
-	/// </summary>
+	/// <summary>玩家的角色管理器</summary>
 	public class PlayerActorMgr : MonoBehaviour {
 		[HideInInspector]
 		public PlayerActionCtrl actionCtrl;
@@ -29,8 +27,8 @@ namespace DSWork {
 		[HideInInspector]
 		public PlayerWeaponMgr weaponMgr;
 
-		void Awake() {
-			
+		private void Awake() {
+
 			actionCtrl = GetComponent<PlayerActionCtrl>();
 			battleMgr = GameObject.Find("Sensor").gameObject.SafeGetComponent<PlayerBattleMgr>();
 			battleMgr.actorMgr = this;

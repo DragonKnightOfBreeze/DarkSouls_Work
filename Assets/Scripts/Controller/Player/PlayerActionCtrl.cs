@@ -204,7 +204,7 @@ namespace DSWork {
 			else if(inputMgr.Sgn_Dodge)
 				animator.SetTrigger(EPlayer_FSMParam.dodge.TS());
 
-			
+
 
 			//设置角色的左右手动作
 			//NOTE：注意动作的优先级
@@ -272,7 +272,7 @@ namespace DSWork {
 		private void RegisterFSMEvents() {
 			//后跃状态的相关事件
 			animator.GetBehaviour<FSMEvents_Jab>().OnEnterEvent += () => {
-				StateLock(lockAttacked:true);
+				StateLock(lockAttacked: true);
 				trackDir = true;
 			};
 			animator.GetBehaviour<FSMEvents_Jab>().OnExitEvent += () => StateUnlock();
@@ -281,13 +281,13 @@ namespace DSWork {
 
 			//翻滚状态的相关事件
 			animator.GetBehaviour<FSMEvents_Roll>().OnEnterEvent += () => {
-				StateLock(lockAttacked:true);
+				StateLock(lockAttacked: true);
 				trackDir = true;
 			};
 			animator.GetBehaviour<FSMEvents_Roll>().OnUpdateEvent += () =>
 				StateSetSpeed(EPlayer_FSMCurve.spd_Roll_Y, rollSpeed_Z);
 			animator.GetBehaviour<FSMEvents_Roll>().OnExitEvent += () => StateUnlock();
-			
+
 			//跳跃状态的相关事件
 			animator.GetBehaviour<FSMEvents_Jump>().OnEnterEvent += () => {
 				StateLock();
@@ -311,7 +311,7 @@ namespace DSWork {
 			//受伤状态
 			animator.GetBehaviour<FSMEvents_Hurt>().OnEnterEvent += () => { StateLock(); };
 			animator.GetBehaviour<FSMEvents_Hurt>().OnExitEvent += () => { StateLock(); };
-			
+
 			//单手攻击状态的相关事件
 			animator.GetBehaviour<FSMEvents_RHand_Slash>().OnUpdateEvent += () => { StateSetSpeed(0f, EPlayer_FSMCurve.spd_Atk_1H_Slash1_Z); };
 
@@ -324,16 +324,16 @@ namespace DSWork {
 		}
 
 		/// <summary>进出某一状态时，锁定相关的参数</summary>
-		private void StateLock(bool lockInput = true, bool lockMove = true,bool lockAction = true,bool lockAttacked = false) {
-			this.inputMgr.LockInput = lockInput;
+		private void StateLock(bool lockInput = true, bool lockMove = true, bool lockAction = true, bool lockAttacked = false) {
+			inputMgr.LockInput = lockInput;
 			this.lockMove = lockMove;
 			this.lockAction = lockAction;
 			this.lockAttacked = lockAttacked;
 		}
 
 		/// <summary>进出某一状态时，解锁相关的参数</summary>
-		private void StateUnlock(bool lockInput = false, bool lockMove = false,bool lockAction = false,bool lockAttacked = false) {
-			this.inputMgr.LockInput = lockInput;
+		private void StateUnlock(bool lockInput = false, bool lockMove = false, bool lockAction = false, bool lockAttacked = false) {
+			inputMgr.LockInput = lockInput;
 			this.lockMove = lockMove;
 			this.lockAction = lockAction;
 			this.lockAttacked = lockAttacked;
@@ -398,7 +398,7 @@ namespace DSWork {
 		public void IssueTrigger(string triggerName) {
 			animator.SetTrigger(triggerName);
 		}
-		
+
 		/// <summary>更新Root Motion</summary>
 		/// <remarks>仅在第三段攻击时应用</remarks>
 		/// <param name="deltaPosObj"></param>

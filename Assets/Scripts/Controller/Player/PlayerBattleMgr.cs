@@ -19,18 +19,16 @@ using DSWork.Global;
 using DSWork.Utility;
 using UnityEngine;
 
-namespace DSWork{
-	/// <summary>
-	/// 玩家的战斗管理器
-	/// </summary>
+namespace DSWork {
+	/// <summary>玩家的战斗管理器</summary>
 	[RequireComponent(typeof(CapsuleCollider))]
 	public class PlayerBattleMgr : MonoBehaviour {
 		[HideInInspector]
 		public PlayerActorMgr actorMgr;
-		
-		
+
+
 		private CapsuleCollider defCol;
-		
+
 		private void Start() {
 			defCol = GetComponent<CapsuleCollider>();
 			defCol.center = new Vector3(0, 0.9f, 0);
@@ -38,12 +36,10 @@ namespace DSWork{
 			defCol.radius = 0.3f;
 			defCol.isTrigger = true;
 		}
-		
+
 		private void OnTriggerEnter(Collider other) {
 			//print(other.name);
-			if(other.CompareTag(ETag.Weapon.TS())) {
-				
-			}
+			if(other.CompareTag(ETag.Weapon.TS())) { }
 		}
 	}
 }

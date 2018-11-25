@@ -17,7 +17,5 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace DSWork {
-	public class WeaponCtrl : MonoBehaviour {
-		
-	}
+	public class WeaponCtrl : MonoBehaviour { }
 }

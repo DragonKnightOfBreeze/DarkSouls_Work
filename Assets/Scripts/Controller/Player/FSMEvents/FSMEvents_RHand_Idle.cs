@@ -1,5 +1,3 @@
 namespace DSWork {
-	public class FSMEvents_RHand_Idle:FSMEvents {
-
-	}
+	public class FSMEvents_RHand_Idle : FSMEvents { }
 }

@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 
 namespace DSWork.VInput {
-    /// <summary>输入管理器 键盘输入和虚拟手柄输入同时存在</summary>
-    public class InputManager : MonoBehaviour {
-        /// <summary>脚本的单例</summary>
-        public static InputManager Instance { get; private set; }
+	/// <summary>输入管理器 键盘输入和虚拟手柄输入同时存在</summary>
+	public class InputManager : MonoBehaviour {
+		/// <summary>脚本的单例</summary>
+		public static InputManager Instance { get; private set; }
 
-        /// <summary>键盘输入</summary>
-        private KeyboardInput mKeyboardInput;
-        /// <summary>手柄输入</summary>
-        private JoystickInput mJoystickInput;
+		/// <summary>键盘输入</summary>
+		private KeyboardInput mKeyboardInput;
+		/// <summary>手柄输入</summary>
+		private JoystickInput mJoystickInput;
 
 		private void Awake() {
 			if(Instance == null) {

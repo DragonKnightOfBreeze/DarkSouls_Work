@@ -12,11 +12,10 @@ namespace DSWork {
 			int layerIndex = animator.GetLayerIndex(layerName.TS());
 			return animator.GetCurrentAnimatorStateInfo(layerIndex).IsName(stateName.TS());
 		}
-		
+
 		public static bool CheckStateTag(this Animator animator, EPlayer_FSMStateTag tagName, EPlayer_FSMLayer layerName = EPlayer_FSMLayer.BaseLayer) {
 			int layerIndex = animator.GetLayerIndex(layerName.TS());
 			return animator.GetCurrentAnimatorStateInfo(layerIndex).IsTag(tagName.TS());
 		}
-		
 	}
 }

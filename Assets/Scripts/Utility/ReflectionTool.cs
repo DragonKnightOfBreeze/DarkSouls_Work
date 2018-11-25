@@ -56,7 +56,7 @@ namespace DSWork.Utility {
 		public static object GetAttrMember(object rObject, string rMemberName, BindingFlags rBindFlags) {
 			if(rObject == null) return null;
 			var rType = rObject.GetType();
-			return rType.InvokeMember(rMemberName, rBindFlags, null, rObject, new object[] { });
+			return rType.InvokeMember(rMemberName, rBindFlags, null, rObject, new object[]{ });
 		}
 
 		/// <summary>设置指定的成员。</summary>
