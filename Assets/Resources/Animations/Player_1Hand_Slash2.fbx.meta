@@ -193,10 +193,26 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.3123459
+      - time: 0.41156462
         functionName: ResetTrigger
         data: attack
         objectReferenceParameter: {fileID: 11500000, guid: b62f687d696640f3929b945fac639b11,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.4248691
+        functionName: EnableWeapon
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: db665168fe3946a880f2bc3c12c2df0f,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.65377337
+        functionName: DisableWeapon
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: db665168fe3946a880f2bc3c12c2df0f,
           type: 3}
         floatParameter: 0
         intParameter: 0

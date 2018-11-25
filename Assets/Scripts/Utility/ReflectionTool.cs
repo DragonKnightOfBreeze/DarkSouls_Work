@@ -3,7 +3,7 @@
 using System.Reflection;
 using System;
 
-namespace DsWork.Utility {
+namespace DSWork.Utility {
 	/// <summary>反射工具类</summary>
 	public static class ReflectionTool {
 		public static readonly BindingFlags flags_common = BindingFlags.Instance | BindingFlags.SetField | BindingFlags.GetField | BindingFlags.GetProperty | BindingFlags.SetProperty;

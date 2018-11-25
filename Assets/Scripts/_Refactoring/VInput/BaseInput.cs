@@ -1,5 +1,5 @@
 ﻿using System;
-using DsWork.Utility;
+using DSWork.Utility;
 
 namespace DSWork.VInput {
 	[Flags]

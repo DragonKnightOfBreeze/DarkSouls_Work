@@ -1,19 +1,20 @@
+using System;
 using UnityEngine;
 
 namespace DSWork.Utility {
 	/// <summary>脚本工具类</summary>
+	[Obsolete]
 	public static class ScriptTool {
-		/// <summary>挂载脚本的游戏对象组的根节点的名字</summary>
 		private const string ROOT = "_Scripts";
 		private static GameObject root;
 
 		
-		/// <summary>得到挂载到空的游戏对象上的脚本。</summary>
+		/// <summary>得到挂载到空的游戏对象上的脚本，默认以_Scripts为根节点。</summary>
 		/// <remarks>如果没有，则自动添加。</remarks>
 		/// <param name="path">脚本路径</param>
 		/// <returns></returns>
 		public static T GetScript<T>(params string[] path)
-			where T : MonoBehaviour {
+		where T : MonoBehaviour {
 			var child = GetRoot();
 			foreach(string p in path) {
 				child = child.FindChild(p);

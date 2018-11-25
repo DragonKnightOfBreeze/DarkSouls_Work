@@ -201,6 +201,22 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+      - time: 0.27126232
+        functionName: EnableWeapon
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: db665168fe3946a880f2bc3c12c2df0f,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.6299998
+        functionName: DisableWeapon
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: db665168fe3946a880f2bc3c12c2df0f,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

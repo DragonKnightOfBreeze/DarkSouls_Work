@@ -12,8 +12,6 @@
  * 作者：微风的龙骑士 风游迩
  */
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace DSWork {
