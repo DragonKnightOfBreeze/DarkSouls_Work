@@ -9,8 +9,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{FDF2C2A2-B12A-6FC2-7622-AD03E887F607}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -55,56 +54,62 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Utility\SimpleTimer.cs" />
     <Compile Include="Assets\Scripts\_Deprecated\FSMOnEnter.cs" />
     <Compile Include="Assets\Scripts\_Deprecated\FSMOnExit.cs" />
     <Compile Include="Assets\Scripts\_Deprecated\FSMOnUpdate.cs" />
+    <Compile Include="Assets\Scripts\_Deprecated\MyInput\IMyAxis.cs" />
+    <Compile Include="Assets\Scripts\_Deprecated\MyInput\IMyButton.cs" />
+    <Compile Include="Assets\Scripts\_Deprecated\MyInput\MyAxis.cs" />
+    <Compile Include="Assets\Scripts\_Deprecated\MyInput\MyButton.cs" />
+    <Compile Include="Assets\Scripts\_Deprecated\MyTimer.cs" />
     <Compile Include="Assets\Scripts\_Deprecated\OnGroundSensor.cs" />
-    <Compile Include="Assets\Scripts\_Refactoring\InputEX\MyAxisEX.cs" />
-    <Compile Include="Assets\Scripts\_Refactoring\InputEX\IMyInputEX.cs" />
-    <Compile Include="Assets\Scripts\_Refactoring\InputEX\InputEnum.cs" />
-    <Compile Include="Assets\Scripts\_Refactoring\InputEX\InputMgr.cs" />
-    <Compile Include="Assets\Scripts\_Refactoring\InputEX\MyButtonEX.cs" />
-    <Compile Include="Assets\Scripts\_Refactoring\InputEX\Timer.cs" />
     <Compile Include="Assets\Scripts\_Refactoring\VInput\BaseInput.cs" />
     <Compile Include="Assets\Scripts\_Refactoring\VInput\InputManager.cs" />
     <Compile Include="Assets\Scripts\_Refactoring\VInput\Joystick.cs" />
     <Compile Include="Assets\Scripts\_Refactoring\VInput\JoystickInput.cs" />
     <Compile Include="Assets\Scripts\_Refactoring\VInput\KeyboardInput.cs" />
     <Compile Include="Assets\Scripts\_Test\JoyStickTest.cs" />
-    <Compile Include="Assets\Scripts\AnimEvents\PlayerAnimEvents.cs" />
-    <Compile Include="Assets\Scripts\Camera\CameraControl.cs" />
-    <Compile Include="Assets\Scripts\Controller\ActionControl.cs" />
-    <Compile Include="Assets\Scripts\Controller\PlayerInput.cs" />
-    <Compile Include="Assets\Scripts\FSMClearSignals.cs" />
-    <Compile Include="Assets\Scripts\FSMEvents\FSMEvents.cs" />
-    <Compile Include="Assets\Scripts\FSMEvents\FSMEvents_Fall.cs" />
-    <Compile Include="Assets\Scripts\FSMEvents\FSMEvents_Jab.cs" />
-    <Compile Include="Assets\Scripts\FSMEvents\FSMEvents_Jump.cs" />
-    <Compile Include="Assets\Scripts\FSMEvents\FSMEvents_LHand_Idle.cs" />
-    <Compile Include="Assets\Scripts\FSMEvents\FSMEvents_LHand_ShieldUp.cs" />
-    <Compile Include="Assets\Scripts\FSMEvents\FSMEvents_OnGround.cs" />
-    <Compile Include="Assets\Scripts\FSMEvents\FSMEvents_RHand_Idle.cs" />
-    <Compile Include="Assets\Scripts\FSMEvents\FSMEvents_RHand_Slash.cs" />
-    <Compile Include="Assets\Scripts\FSMEvents\FSMEvents_Roll.cs" />
+    <Compile Include="Assets\Scripts\Controller\Enemy\DummyActionCtrl.cs" />
+    <Compile Include="Assets\Scripts\Controller\Enemy\DummyInputMgr.cs" />
+    <Compile Include="Assets\Scripts\Controller\Enemy\EnemyCameraCtrl.cs" />
+    <Compile Include="Assets\Scripts\Controller\InputEX\AxisEX.cs" />
+    <Compile Include="Assets\Scripts\Controller\InputEX\ButtonEX.cs" />
+    <Compile Include="Assets\Scripts\Controller\InputEX\EInput.cs" />
+    <Compile Include="Assets\Scripts\Controller\InputEX\IInputEX.cs" />
+    <Compile Include="Assets\Scripts\Controller\Player\AnimEvents\PlayerAnimEvents.cs" />
+    <Compile Include="Assets\Scripts\Controller\Player\FSMEvents\FSMEvents.cs" />
+    <Compile Include="Assets\Scripts\Controller\Player\FSMEvents\FSMEvents_Fall.cs" />
+    <Compile Include="Assets\Scripts\Controller\Player\FSMEvents\FSMEvents_Hurt.cs" />
+    <Compile Include="Assets\Scripts\Controller\Player\FSMEvents\FSMEvents_Jab.cs" />
+    <Compile Include="Assets\Scripts\Controller\Player\FSMEvents\FSMEvents_Jump.cs" />
+    <Compile Include="Assets\Scripts\Controller\Player\FSMEvents\FSMEvents_LHand_Idle.cs" />
+    <Compile Include="Assets\Scripts\Controller\Player\FSMEvents\FSMEvents_LHand_ShieldUp.cs" />
+    <Compile Include="Assets\Scripts\Controller\Player\FSMEvents\FSMEvents_OnGround.cs" />
+    <Compile Include="Assets\Scripts\Controller\Player\FSMEvents\FSMEvents_RHand_Idle.cs" />
+    <Compile Include="Assets\Scripts\Controller\Player\FSMEvents\FSMEvents_RHand_Slash.cs" />
+    <Compile Include="Assets\Scripts\Controller\Player\FSMEvents\FSMEvents_Roll.cs" />
+    <Compile Include="Assets\Scripts\Controller\Player\PlayerActionCtrl.cs" />
+    <Compile Include="Assets\Scripts\Controller\Player\PlayerActorMgr.cs" />
+    <Compile Include="Assets\Scripts\Controller\Player\PlayerBattleMgr.cs" />
+    <Compile Include="Assets\Scripts\Controller\Player\PlayerCameraCtrl.cs" />
+    <Compile Include="Assets\Scripts\Controller\Player\PlayerInputMgr.cs" />
+    <Compile Include="Assets\Scripts\Controller\Player\PlayerWeaponMgr.cs" />
+    <Compile Include="Assets\Scripts\Controller\Player\SmallFix\LeftArmAnimFix.cs" />
+    <Compile Include="Assets\Scripts\Controller\Player\SmallFix\RootMotionControl.cs" />
+    <Compile Include="Assets\Scripts\Controller\WeaponCtrl.cs" />
     <Compile Include="Assets\Scripts\Global\GameConst.cs" />
     <Compile Include="Assets\Scripts\Global\GameDelegate.cs" />
     <Compile Include="Assets\Scripts\Global\GameEnum.cs" />
     <Compile Include="Assets\Scripts\Global\GlobalSetting.cs" />
-    <Compile Include="Assets\Scripts\LeftArmAnimFix.cs" />
-    <Compile Include="Assets\Scripts\MyInput\IMyAxis.cs" />
-    <Compile Include="Assets\Scripts\MyInput\IMyButton.cs" />
-    <Compile Include="Assets\Scripts\MyInput\MyAxis.cs" />
-    <Compile Include="Assets\Scripts\MyInput\MyButton.cs" />
-    <Compile Include="Assets\Scripts\MyTimer.cs" />
-    <Compile Include="Assets\Scripts\RootMotionControl.cs" />
     <Compile Include="Assets\Scripts\Utility\AnimatorExt.cs" />
     <Compile Include="Assets\Scripts\Utility\BoolExt.cs" />
     <Compile Include="Assets\Scripts\Utility\EnumExt.cs" />
+    <Compile Include="Assets\Scripts\Utility\FSMClearSignals.cs" />
     <Compile Include="Assets\Scripts\Utility\GameObjectExt.cs" />
     <Compile Include="Assets\Scripts\Utility\NoDestroyOnLoad.cs" />
     <Compile Include="Assets\Scripts\Utility\ReflectionTool.cs" />
     <Compile Include="Assets\Scripts\Utility\ScriptTool.cs" />
+    <Compile Include="Assets\Scripts\Utility\SimpleTimer.cs" />
     <Compile Include="Assets\Scripts\Utility\Singleton.cs" />
     <None Include="Assets\Documents\参考网站.txt" />
     <Reference Include="UnityEditor.StandardEvents">
